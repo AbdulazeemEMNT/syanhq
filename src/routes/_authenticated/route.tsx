@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
-import { ensureConfiguredAdminAccess, getUserRolesForUser, isConfiguredAdminEmail } from "@/lib/admin-data";
+import { ensureConfiguredAdminAccess, isConfiguredAdminEmail } from "@/lib/admin-data";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -9,14 +9,17 @@ export const Route = createFileRoute("/_authenticated")({
     if (error || !data.user) throw redirect({ to: "/auth" });
 
     const user = data.user;
-    const roles = await getUserRolesForUser(user.id, user.email);
 
-    if (roles.length === 0 && isConfiguredAdminEmail(user.email)) {
-      const granted = await ensureConfiguredAdminAccess(user);
-      if (granted) return { user };
+    // Signed-in staff without a role still reach the admin shell, where they can
+    // claim the first admin seat or wait for an admin to grant them a role.
+    if (isConfiguredAdminEmail(user.email)) {
+      try {
+        await ensureConfiguredAdminAccess(user);
+      } catch {
+        // Role bootstrap is best-effort; the shell handles the no-role state.
+      }
     }
 
-    if (roles.length === 0) throw redirect({ to: "/auth" });
     return { user };
   },
   component: () => <Outlet />,
