@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1790791303576,
+      "tag": "0000_syan_core_schema",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1790791317316,
+      "tag": "0001_syan_function_grants",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790791327168,
+      "tag": "0002_syan_admin_claim",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1790791337243,
+      "tag": "0003_syan_role_grant_fn",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790791361730,
+      "tag": "0004_syan_cms_tables",
+      "breakpoints": true
+    }
+  ]
+}
