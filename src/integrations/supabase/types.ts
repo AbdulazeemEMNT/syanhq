@@ -14,29 +14,290 @@ export type Database = {
   }
   public: {
     Tables: {
-      integrations: {
+      cms_brands: {
         Row: {
-          category: string
+          created_at: string
+          featured: boolean
+          id: string
+          name: string
+          note: string | null
+          published: boolean
+          sector: string
+          sort_order: number
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          created_at?: string
+          featured?: boolean
+          id?: string
+          name: string
+          note?: string | null
+          published?: boolean
+          sector?: string
+          sort_order?: number
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          created_at?: string
+          featured?: boolean
+          id?: string
+          name?: string
+          note?: string | null
+          published?: boolean
+          sector?: string
+          sort_order?: number
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
+      cms_careers: {
+        Row: {
+          created_at: string
+          detail: string
+          employment_type: string
+          id: string
+          location: string
+          published: boolean
+          requirements: string[]
+          responsibilities: string[]
+          slug: string
+          sort_order: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          detail?: string
+          employment_type?: string
+          id?: string
+          location?: string
+          published?: boolean
+          requirements?: string[]
+          responsibilities?: string[]
+          slug: string
+          sort_order?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          detail?: string
+          employment_type?: string
+          id?: string
+          location?: string
+          published?: boolean
+          requirements?: string[]
+          responsibilities?: string[]
+          slug?: string
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      cms_case_studies: {
+        Row: {
+          approach: string[]
+          brief: string | null
+          challenge: string
+          client: string
+          created_at: string
+          deliverables: string[]
+          engagement_period: string | null
+          execution: string | null
+          headline: string
+          id: string
+          metrics: Json
+          outcome_narrative: string | null
+          published: boolean
+          results: string[]
+          sector: string
+          services: string[]
+          slug: string
+          sort_order: number
+          strategy: string | null
+          summary: string
+          testimonial: string | null
+          testimonial_author: string | null
+          updated_at: string
+        }
+        Insert: {
+          approach?: string[]
+          brief?: string | null
+          challenge?: string
+          client: string
+          created_at?: string
+          deliverables?: string[]
+          engagement_period?: string | null
+          execution?: string | null
+          headline?: string
+          id?: string
+          metrics?: Json
+          outcome_narrative?: string | null
+          published?: boolean
+          results?: string[]
+          sector?: string
+          services?: string[]
+          slug: string
+          sort_order?: number
+          strategy?: string | null
+          summary?: string
+          testimonial?: string | null
+          testimonial_author?: string | null
+          updated_at?: string
+        }
+        Update: {
+          approach?: string[]
+          brief?: string | null
+          challenge?: string
+          client?: string
+          created_at?: string
+          deliverables?: string[]
+          engagement_period?: string | null
+          execution?: string | null
+          headline?: string
+          id?: string
+          metrics?: Json
+          outcome_narrative?: string | null
+          published?: boolean
+          results?: string[]
+          sector?: string
+          services?: string[]
+          slug?: string
+          sort_order?: number
+          strategy?: string | null
+          summary?: string
+          testimonial?: string | null
+          testimonial_author?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      cms_pricing_addons: {
+        Row: {
           created_at: string
           id: string
+          name: string
+          price: string
+          published: boolean
+          scope: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          price?: string
+          published?: boolean
+          scope?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          price?: string
+          published?: boolean
+          scope?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      cms_pricing_bouquets: {
+        Row: {
+          audience: string
+          cadence: string
+          created_at: string
+          featured: boolean
+          highlights: string[]
+          id: string
+          name: string
+          price: string
+          published: boolean
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          audience?: string
+          cadence?: string
+          created_at?: string
+          featured?: boolean
+          highlights?: string[]
+          id?: string
+          name: string
+          price?: string
+          published?: boolean
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          audience?: string
+          cadence?: string
+          created_at?: string
+          featured?: boolean
+          highlights?: string[]
+          id?: string
+          name?: string
+          price?: string
+          published?: boolean
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      integrations: {
+        Row: {
+          api_key: string | null
+          base_url: string | null
+          category: string
+          config: Json
+          created_at: string
+          enabled: boolean
+          id: string
+          last_test_message: string | null
+          last_test_status: string | null
+          last_tested_at: string | null
           notes: string | null
           provider: string
           status: string
           updated_at: string
         }
         Insert: {
+          api_key?: string | null
+          base_url?: string | null
           category?: string
+          config?: Json
           created_at?: string
+          enabled?: boolean
           id?: string
+          last_test_message?: string | null
+          last_test_status?: string | null
+          last_tested_at?: string | null
           notes?: string | null
           provider: string
           status?: string
           updated_at?: string
         }
         Update: {
+          api_key?: string | null
+          base_url?: string | null
           category?: string
+          config?: Json
           created_at?: string
+          enabled?: boolean
           id?: string
+          last_test_message?: string | null
+          last_test_status?: string | null
+          last_tested_at?: string | null
           notes?: string | null
           provider?: string
           status?: string
