@@ -14,8 +14,8 @@ const normalizeEmail = (value?: string | null) => value?.trim().toLowerCase();
 
 export function getConfiguredAdminEmails() {
   const configured =
-    (import.meta.env.VITE_ALLOWED_ADMIN_EMAILS as string | undefined) ??
-    (typeof process !== "undefined" ? process.env.ALLOWED_ADMIN_EMAILS : undefined) ??
+    (import.meta.env["VITE_ALLOWED_ADMIN_EMAILS"] as string | undefined) ??
+    (typeof process !== "undefined" ? process.env["ALLOWED_ADMIN_EMAILS"] : undefined) ??
     "";
 
   return configured
@@ -29,7 +29,9 @@ export function isConfiguredAdminEmail(email?: string | null) {
   return normalized ? getConfiguredAdminEmails().includes(normalized) : false;
 }
 
-export async function ensureConfiguredAdminAccess(user?: { id?: string; email?: string | null } | null) {
+export async function ensureConfiguredAdminAccess(
+  user?: { id?: string | undefined; email?: string | null | undefined } | null,
+) {
   if (!user?.id || !user.email) return false;
   if (!isConfiguredAdminEmail(user.email)) return false;
 
