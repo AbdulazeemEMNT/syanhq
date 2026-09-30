@@ -22,6 +22,13 @@
       "when": 1790791327168,
       "tag": "0002_syan_admin_claim",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1790791337243,
+      "tag": "0003_syan_role_grant_fn",
+      "breakpoints": true
     }
   ]
 }
