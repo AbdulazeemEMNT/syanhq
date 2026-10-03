@@ -39,6 +39,10 @@ import { Route as AuthenticatedIntelligenceMentionsRouteImport } from './routes/
 import { Route as AuthenticatedIntelligenceOverviewRouteImport } from './routes/_authenticated/intelligence/overview'
 import { Route as AuthenticatedIntelligenceReportsRouteImport } from './routes/_authenticated/intelligence/reports'
 import { Route as AuthenticatedIntelligenceTopicsRouteImport } from './routes/_authenticated/intelligence/topics'
+import { Route as AuthenticatedAdminArticlesIndexRouteImport } from './routes/_authenticated/admin/articles.index'
+import { Route as AuthenticatedAdminCareersIndexRouteImport } from './routes/_authenticated/admin/careers.index'
+import { Route as AuthenticatedAdminMessagesIndexRouteImport } from './routes/_authenticated/admin/messages.index'
+import { Route as AuthenticatedAdminWorksIndexRouteImport } from './routes/_authenticated/admin/works.index'
 import { Route as AuthenticatedIntelligenceIntegrationsIndexRouteImport } from './routes/_authenticated/intelligence/integrations.index'
 import { Route as AuthenticatedIntelligenceProjectsIndexRouteImport } from './routes/_authenticated/intelligence/projects.index'
 import { Route as AuthenticatedIntelligenceProjectsIdRouteImport } from './routes/_authenticated/intelligence/projects.$id'
@@ -200,6 +204,30 @@ const AuthenticatedIntelligenceTopicsRoute =
     path: '/topics',
     getParentRoute: () => AuthenticatedIntelligenceRouteRoute,
   } as any)
+const AuthenticatedAdminArticlesIndexRoute =
+  AuthenticatedAdminArticlesIndexRouteImport.update({
+    id: '/articles/',
+    path: '/articles/',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminCareersIndexRoute =
+  AuthenticatedAdminCareersIndexRouteImport.update({
+    id: '/careers/',
+    path: '/careers/',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminMessagesIndexRoute =
+  AuthenticatedAdminMessagesIndexRouteImport.update({
+    id: '/messages/',
+    path: '/messages/',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminWorksIndexRoute =
+  AuthenticatedAdminWorksIndexRouteImport.update({
+    id: '/works/',
+    path: '/works/',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedIntelligenceIntegrationsIndexRoute =
   AuthenticatedIntelligenceIntegrationsIndexRouteImport.update({
     id: '/integrations/',
@@ -256,6 +284,10 @@ export interface FileRoutesByFullPath {
   '/intelligence/topics': typeof AuthenticatedIntelligenceTopicsRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/intelligence/projects/$id': typeof AuthenticatedIntelligenceProjectsIdRoute
+  '/admin/articles/': typeof AuthenticatedAdminArticlesIndexRoute
+  '/admin/careers/': typeof AuthenticatedAdminCareersIndexRoute
+  '/admin/messages/': typeof AuthenticatedAdminMessagesIndexRoute
+  '/admin/works/': typeof AuthenticatedAdminWorksIndexRoute
   '/intelligence/integrations/': typeof AuthenticatedIntelligenceIntegrationsIndexRoute
   '/intelligence/projects/': typeof AuthenticatedIntelligenceProjectsIndexRoute
   '/intelligence/users/': typeof AuthenticatedIntelligenceUsersIndexRoute
@@ -289,6 +321,10 @@ export interface FileRoutesByTo {
   '/intelligence/topics': typeof AuthenticatedIntelligenceTopicsRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/intelligence/projects/$id': typeof AuthenticatedIntelligenceProjectsIdRoute
+  '/admin/articles': typeof AuthenticatedAdminArticlesIndexRoute
+  '/admin/careers': typeof AuthenticatedAdminCareersIndexRoute
+  '/admin/messages': typeof AuthenticatedAdminMessagesIndexRoute
+  '/admin/works': typeof AuthenticatedAdminWorksIndexRoute
   '/intelligence/integrations': typeof AuthenticatedIntelligenceIntegrationsIndexRoute
   '/intelligence/projects': typeof AuthenticatedIntelligenceProjectsIndexRoute
   '/intelligence/users': typeof AuthenticatedIntelligenceUsersIndexRoute
@@ -326,6 +362,10 @@ export interface FileRoutesById {
   '/_authenticated/intelligence/topics': typeof AuthenticatedIntelligenceTopicsRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/intelligence/projects/$id': typeof AuthenticatedIntelligenceProjectsIdRoute
+  '/_authenticated/admin/articles/': typeof AuthenticatedAdminArticlesIndexRoute
+  '/_authenticated/admin/careers/': typeof AuthenticatedAdminCareersIndexRoute
+  '/_authenticated/admin/messages/': typeof AuthenticatedAdminMessagesIndexRoute
+  '/_authenticated/admin/works/': typeof AuthenticatedAdminWorksIndexRoute
   '/_authenticated/intelligence/integrations/': typeof AuthenticatedIntelligenceIntegrationsIndexRoute
   '/_authenticated/intelligence/projects/': typeof AuthenticatedIntelligenceProjectsIndexRoute
   '/_authenticated/intelligence/users/': typeof AuthenticatedIntelligenceUsersIndexRoute
@@ -363,6 +403,10 @@ export interface FileRouteTypes {
     | '/intelligence/topics'
     | '/admin/'
     | '/intelligence/projects/$id'
+    | '/admin/articles/'
+    | '/admin/careers/'
+    | '/admin/messages/'
+    | '/admin/works/'
     | '/intelligence/integrations/'
     | '/intelligence/projects/'
     | '/intelligence/users/'
@@ -396,6 +440,10 @@ export interface FileRouteTypes {
     | '/intelligence/topics'
     | '/admin'
     | '/intelligence/projects/$id'
+    | '/admin/articles'
+    | '/admin/careers'
+    | '/admin/messages'
+    | '/admin/works'
     | '/intelligence/integrations'
     | '/intelligence/projects'
     | '/intelligence/users'
@@ -432,6 +480,10 @@ export interface FileRouteTypes {
     | '/_authenticated/intelligence/topics'
     | '/_authenticated/admin/'
     | '/_authenticated/intelligence/projects/$id'
+    | '/_authenticated/admin/articles/'
+    | '/_authenticated/admin/careers/'
+    | '/_authenticated/admin/messages/'
+    | '/_authenticated/admin/works/'
     | '/_authenticated/intelligence/integrations/'
     | '/_authenticated/intelligence/projects/'
     | '/_authenticated/intelligence/users/'
@@ -673,6 +725,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIntelligenceTopicsRouteImport
       parentRoute: typeof AuthenticatedIntelligenceRouteRoute
     }
+    '/_authenticated/admin/articles/': {
+      id: '/_authenticated/admin/articles/'
+      path: '/articles'
+      fullPath: '/admin/articles/'
+      preLoaderRoute: typeof AuthenticatedAdminArticlesIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/careers/': {
+      id: '/_authenticated/admin/careers/'
+      path: '/careers'
+      fullPath: '/admin/careers/'
+      preLoaderRoute: typeof AuthenticatedAdminCareersIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/messages/': {
+      id: '/_authenticated/admin/messages/'
+      path: '/messages'
+      fullPath: '/admin/messages/'
+      preLoaderRoute: typeof AuthenticatedAdminMessagesIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/works/': {
+      id: '/_authenticated/admin/works/'
+      path: '/works'
+      fullPath: '/admin/works/'
+      preLoaderRoute: typeof AuthenticatedAdminWorksIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/intelligence/integrations/': {
       id: '/_authenticated/intelligence/integrations/'
       path: '/integrations'
@@ -706,11 +786,19 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+  AuthenticatedAdminArticlesIndexRoute: typeof AuthenticatedAdminArticlesIndexRoute
+  AuthenticatedAdminCareersIndexRoute: typeof AuthenticatedAdminCareersIndexRoute
+  AuthenticatedAdminMessagesIndexRoute: typeof AuthenticatedAdminMessagesIndexRoute
+  AuthenticatedAdminWorksIndexRoute: typeof AuthenticatedAdminWorksIndexRoute
 }
 
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+    AuthenticatedAdminArticlesIndexRoute: AuthenticatedAdminArticlesIndexRoute,
+    AuthenticatedAdminCareersIndexRoute: AuthenticatedAdminCareersIndexRoute,
+    AuthenticatedAdminMessagesIndexRoute: AuthenticatedAdminMessagesIndexRoute,
+    AuthenticatedAdminWorksIndexRoute: AuthenticatedAdminWorksIndexRoute,
   }
 
 const AuthenticatedAdminRouteRouteWithChildren =

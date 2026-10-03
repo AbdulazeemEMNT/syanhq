@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero, Section } from "@/components/site/Primitives";
 import { contact, services } from "@/content/site";
@@ -52,9 +53,20 @@ function Contact() {
           <p className="eyebrow">Enquiry</p>
           <form
             className="mt-8 space-y-6"
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
               e.preventDefault();
               setSent(true);
+              try {
+                await supabase.from("contact_messages").insert({
+                  name: form.name,
+                  organisation: form.organisation || null,
+                  email: form.email,
+                  interest: form.interest || null,
+                  message: form.message,
+                });
+              } catch {
+                // the mailto handoff below still fires even if saving fails
+              }
               window.location.href = mailto;
             }}
           >
