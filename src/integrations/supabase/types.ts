@@ -140,13 +140,16 @@ export type Database = {
       cms_case_studies: {
         Row: {
           approach: string[]
+          archived: boolean
           brief: string | null
           challenge: string
           client: string
+          cover_image_path: string | null
           created_at: string
           deliverables: string[]
           engagement_period: string | null
           execution: string | null
+          featured: boolean
           headline: string
           id: string
           metrics: Json
@@ -165,13 +168,16 @@ export type Database = {
         }
         Insert: {
           approach?: string[]
+          archived?: boolean
           brief?: string | null
           challenge?: string
           client: string
+          cover_image_path?: string | null
           created_at?: string
           deliverables?: string[]
           engagement_period?: string | null
           execution?: string | null
+          featured?: boolean
           headline?: string
           id?: string
           metrics?: Json
@@ -190,13 +196,16 @@ export type Database = {
         }
         Update: {
           approach?: string[]
+          archived?: boolean
           brief?: string | null
           challenge?: string
           client?: string
+          cover_image_path?: string | null
           created_at?: string
           deliverables?: string[]
           engagement_period?: string | null
           execution?: string | null
+          featured?: boolean
           headline?: string
           id?: string
           metrics?: Json
