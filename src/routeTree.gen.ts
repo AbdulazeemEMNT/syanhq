@@ -34,7 +34,11 @@ import { Route as WorkIndexRouteImport } from './routes/work.index'
 import { Route as WorkSlugRouteImport } from './routes/work.$slug'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as AuthenticatedIntelligenceAskRouteImport } from './routes/_authenticated/intelligence/ask'
+import { Route as AuthenticatedIntelligenceCompetitorsRouteImport } from './routes/_authenticated/intelligence/competitors'
+import { Route as AuthenticatedIntelligenceMentionsRouteImport } from './routes/_authenticated/intelligence/mentions'
 import { Route as AuthenticatedIntelligenceOverviewRouteImport } from './routes/_authenticated/intelligence/overview'
+import { Route as AuthenticatedIntelligenceReportsRouteImport } from './routes/_authenticated/intelligence/reports'
+import { Route as AuthenticatedIntelligenceTopicsRouteImport } from './routes/_authenticated/intelligence/topics'
 import { Route as AuthenticatedIntelligenceIntegrationsIndexRouteImport } from './routes/_authenticated/intelligence/integrations.index'
 import { Route as AuthenticatedIntelligenceProjectsIndexRouteImport } from './routes/_authenticated/intelligence/projects.index'
 import { Route as AuthenticatedIntelligenceProjectsIdRouteImport } from './routes/_authenticated/intelligence/projects.$id'
@@ -166,10 +170,34 @@ const AuthenticatedIntelligenceAskRoute =
     path: '/ask',
     getParentRoute: () => AuthenticatedIntelligenceRouteRoute,
   } as any)
+const AuthenticatedIntelligenceCompetitorsRoute =
+  AuthenticatedIntelligenceCompetitorsRouteImport.update({
+    id: '/competitors',
+    path: '/competitors',
+    getParentRoute: () => AuthenticatedIntelligenceRouteRoute,
+  } as any)
+const AuthenticatedIntelligenceMentionsRoute =
+  AuthenticatedIntelligenceMentionsRouteImport.update({
+    id: '/mentions',
+    path: '/mentions',
+    getParentRoute: () => AuthenticatedIntelligenceRouteRoute,
+  } as any)
 const AuthenticatedIntelligenceOverviewRoute =
   AuthenticatedIntelligenceOverviewRouteImport.update({
     id: '/overview',
     path: '/overview',
+    getParentRoute: () => AuthenticatedIntelligenceRouteRoute,
+  } as any)
+const AuthenticatedIntelligenceReportsRoute =
+  AuthenticatedIntelligenceReportsRouteImport.update({
+    id: '/reports',
+    path: '/reports',
+    getParentRoute: () => AuthenticatedIntelligenceRouteRoute,
+  } as any)
+const AuthenticatedIntelligenceTopicsRoute =
+  AuthenticatedIntelligenceTopicsRouteImport.update({
+    id: '/topics',
+    path: '/topics',
     getParentRoute: () => AuthenticatedIntelligenceRouteRoute,
   } as any)
 const AuthenticatedIntelligenceIntegrationsIndexRoute =
@@ -221,7 +249,11 @@ export interface FileRoutesByFullPath {
   '/services/': typeof ServicesIndexRoute
   '/work/': typeof WorkIndexRoute
   '/intelligence/ask': typeof AuthenticatedIntelligenceAskRoute
+  '/intelligence/competitors': typeof AuthenticatedIntelligenceCompetitorsRoute
+  '/intelligence/mentions': typeof AuthenticatedIntelligenceMentionsRoute
   '/intelligence/overview': typeof AuthenticatedIntelligenceOverviewRoute
+  '/intelligence/reports': typeof AuthenticatedIntelligenceReportsRoute
+  '/intelligence/topics': typeof AuthenticatedIntelligenceTopicsRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/intelligence/projects/$id': typeof AuthenticatedIntelligenceProjectsIdRoute
   '/intelligence/integrations/': typeof AuthenticatedIntelligenceIntegrationsIndexRoute
@@ -250,7 +282,11 @@ export interface FileRoutesByTo {
   '/services': typeof ServicesIndexRoute
   '/work': typeof WorkIndexRoute
   '/intelligence/ask': typeof AuthenticatedIntelligenceAskRoute
+  '/intelligence/competitors': typeof AuthenticatedIntelligenceCompetitorsRoute
+  '/intelligence/mentions': typeof AuthenticatedIntelligenceMentionsRoute
   '/intelligence/overview': typeof AuthenticatedIntelligenceOverviewRoute
+  '/intelligence/reports': typeof AuthenticatedIntelligenceReportsRoute
+  '/intelligence/topics': typeof AuthenticatedIntelligenceTopicsRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/intelligence/projects/$id': typeof AuthenticatedIntelligenceProjectsIdRoute
   '/intelligence/integrations': typeof AuthenticatedIntelligenceIntegrationsIndexRoute
@@ -283,7 +319,11 @@ export interface FileRoutesById {
   '/services/': typeof ServicesIndexRoute
   '/work/': typeof WorkIndexRoute
   '/_authenticated/intelligence/ask': typeof AuthenticatedIntelligenceAskRoute
+  '/_authenticated/intelligence/competitors': typeof AuthenticatedIntelligenceCompetitorsRoute
+  '/_authenticated/intelligence/mentions': typeof AuthenticatedIntelligenceMentionsRoute
   '/_authenticated/intelligence/overview': typeof AuthenticatedIntelligenceOverviewRoute
+  '/_authenticated/intelligence/reports': typeof AuthenticatedIntelligenceReportsRoute
+  '/_authenticated/intelligence/topics': typeof AuthenticatedIntelligenceTopicsRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/intelligence/projects/$id': typeof AuthenticatedIntelligenceProjectsIdRoute
   '/_authenticated/intelligence/integrations/': typeof AuthenticatedIntelligenceIntegrationsIndexRoute
@@ -316,7 +356,11 @@ export interface FileRouteTypes {
     | '/services/'
     | '/work/'
     | '/intelligence/ask'
+    | '/intelligence/competitors'
+    | '/intelligence/mentions'
     | '/intelligence/overview'
+    | '/intelligence/reports'
+    | '/intelligence/topics'
     | '/admin/'
     | '/intelligence/projects/$id'
     | '/intelligence/integrations/'
@@ -345,7 +389,11 @@ export interface FileRouteTypes {
     | '/services'
     | '/work'
     | '/intelligence/ask'
+    | '/intelligence/competitors'
+    | '/intelligence/mentions'
     | '/intelligence/overview'
+    | '/intelligence/reports'
+    | '/intelligence/topics'
     | '/admin'
     | '/intelligence/projects/$id'
     | '/intelligence/integrations'
@@ -377,7 +425,11 @@ export interface FileRouteTypes {
     | '/services/'
     | '/work/'
     | '/_authenticated/intelligence/ask'
+    | '/_authenticated/intelligence/competitors'
+    | '/_authenticated/intelligence/mentions'
     | '/_authenticated/intelligence/overview'
+    | '/_authenticated/intelligence/reports'
+    | '/_authenticated/intelligence/topics'
     | '/_authenticated/admin/'
     | '/_authenticated/intelligence/projects/$id'
     | '/_authenticated/intelligence/integrations/'
@@ -586,11 +638,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIntelligenceAskRouteImport
       parentRoute: typeof AuthenticatedIntelligenceRouteRoute
     }
+    '/_authenticated/intelligence/competitors': {
+      id: '/_authenticated/intelligence/competitors'
+      path: '/competitors'
+      fullPath: '/intelligence/competitors'
+      preLoaderRoute: typeof AuthenticatedIntelligenceCompetitorsRouteImport
+      parentRoute: typeof AuthenticatedIntelligenceRouteRoute
+    }
+    '/_authenticated/intelligence/mentions': {
+      id: '/_authenticated/intelligence/mentions'
+      path: '/mentions'
+      fullPath: '/intelligence/mentions'
+      preLoaderRoute: typeof AuthenticatedIntelligenceMentionsRouteImport
+      parentRoute: typeof AuthenticatedIntelligenceRouteRoute
+    }
     '/_authenticated/intelligence/overview': {
       id: '/_authenticated/intelligence/overview'
       path: '/overview'
       fullPath: '/intelligence/overview'
       preLoaderRoute: typeof AuthenticatedIntelligenceOverviewRouteImport
+      parentRoute: typeof AuthenticatedIntelligenceRouteRoute
+    }
+    '/_authenticated/intelligence/reports': {
+      id: '/_authenticated/intelligence/reports'
+      path: '/reports'
+      fullPath: '/intelligence/reports'
+      preLoaderRoute: typeof AuthenticatedIntelligenceReportsRouteImport
+      parentRoute: typeof AuthenticatedIntelligenceRouteRoute
+    }
+    '/_authenticated/intelligence/topics': {
+      id: '/_authenticated/intelligence/topics'
+      path: '/topics'
+      fullPath: '/intelligence/topics'
+      preLoaderRoute: typeof AuthenticatedIntelligenceTopicsRouteImport
       parentRoute: typeof AuthenticatedIntelligenceRouteRoute
     }
     '/_authenticated/intelligence/integrations/': {
@@ -640,7 +720,11 @@ const AuthenticatedAdminRouteRouteWithChildren =
 
 interface AuthenticatedIntelligenceRouteRouteChildren {
   AuthenticatedIntelligenceAskRoute: typeof AuthenticatedIntelligenceAskRoute
+  AuthenticatedIntelligenceCompetitorsRoute: typeof AuthenticatedIntelligenceCompetitorsRoute
+  AuthenticatedIntelligenceMentionsRoute: typeof AuthenticatedIntelligenceMentionsRoute
   AuthenticatedIntelligenceOverviewRoute: typeof AuthenticatedIntelligenceOverviewRoute
+  AuthenticatedIntelligenceReportsRoute: typeof AuthenticatedIntelligenceReportsRoute
+  AuthenticatedIntelligenceTopicsRoute: typeof AuthenticatedIntelligenceTopicsRoute
   AuthenticatedIntelligenceProjectsIdRoute: typeof AuthenticatedIntelligenceProjectsIdRoute
   AuthenticatedIntelligenceIntegrationsIndexRoute: typeof AuthenticatedIntelligenceIntegrationsIndexRoute
   AuthenticatedIntelligenceProjectsIndexRoute: typeof AuthenticatedIntelligenceProjectsIndexRoute
@@ -650,8 +734,15 @@ interface AuthenticatedIntelligenceRouteRouteChildren {
 const AuthenticatedIntelligenceRouteRouteChildren: AuthenticatedIntelligenceRouteRouteChildren =
   {
     AuthenticatedIntelligenceAskRoute: AuthenticatedIntelligenceAskRoute,
+    AuthenticatedIntelligenceCompetitorsRoute:
+      AuthenticatedIntelligenceCompetitorsRoute,
+    AuthenticatedIntelligenceMentionsRoute:
+      AuthenticatedIntelligenceMentionsRoute,
     AuthenticatedIntelligenceOverviewRoute:
       AuthenticatedIntelligenceOverviewRoute,
+    AuthenticatedIntelligenceReportsRoute:
+      AuthenticatedIntelligenceReportsRoute,
+    AuthenticatedIntelligenceTopicsRoute: AuthenticatedIntelligenceTopicsRoute,
     AuthenticatedIntelligenceProjectsIdRoute:
       AuthenticatedIntelligenceProjectsIdRoute,
     AuthenticatedIntelligenceIntegrationsIndexRoute:
