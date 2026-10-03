@@ -62,5 +62,5 @@ export async function fetchPublishedWork(slug: string): Promise<PublicWork | nul
     .maybeSingle();
   if (error) throw new Error(error.message);
   if (!data) return null;
-  return (await withCovers([data as unknown as Row]))[0];
+  return (await withCovers([data as unknown as Row]))[0] ?? null;
 }

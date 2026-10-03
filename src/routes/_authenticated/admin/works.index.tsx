@@ -101,7 +101,7 @@ function WorksAdmin() {
   const [form, setForm] = useState<Form>(emptyForm);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof Form, string>>>({});
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
@@ -150,7 +150,7 @@ function WorksAdmin() {
   }
 
   function validate(): boolean {
-    const e: Record<string, string> = {};
+    const e: Partial<Record<keyof Form, string>> = {};
     if (!form.headline.trim()) e.headline = "Project title is required";
     if (!form.client.trim()) e.client = "Client is required";
     if (!form.sector.trim()) e.sector = "Sector is required";
@@ -167,21 +167,21 @@ function WorksAdmin() {
   }
 
   async function uploadCover(file: File) {
-    if (!file.type.startsWith("image/")) return toast.error("Please choose an image file");
-    if (file.size > 5 * 1024 * 1024) return toast.error("Image must be under 5 MB");
+    if (!file.type.startsWith("image/")) { toast.error("Please choose an image file"); return; }
+    if (file.size > 5 * 1024 * 1024) { toast.error("Image must be under 5 MB"); return; }
     setUploading(true);
     const ext = file.name.split(".").pop() || "jpg";
     const path = `${crypto.randomUUID()}.${ext}`;
     const { error } = await supabase.storage.from(WORK_COVER_BUCKET).upload(path, file, { contentType: file.type });
     setUploading(false);
-    if (error) return toast.error(`Upload failed: ${error.message}`);
+    if (error) { toast.error(`Upload failed: ${error.message}`); return; }
     set("cover_image_path", path);
     toast.success("Cover uploaded — save to apply");
   }
 
   async function save(e: React.FormEvent) {
     e.preventDefault();
-    if (!validate()) return toast.error("Please fix the highlighted fields");
+    if (!validate()) { toast.error("Please fix the highlighted fields"); return; }
     setSaving(true);
     const payload = {
       headline: form.headline.trim(),
@@ -211,7 +211,7 @@ function WorksAdmin() {
       ? await supabase.from("cms_case_studies").update(payload).eq("id", editingId)
       : await supabase.from("cms_case_studies").insert(payload);
     setSaving(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success(editingId ? "Work updated" : "Work created");
     setOpen(false);
     setEditingId(null);
@@ -220,7 +220,7 @@ function WorksAdmin() {
 
   async function update(id: string, patch: Partial<WorkRow>, msg: string) {
     const { error } = await supabase.from("cms_case_studies").update(patch as never).eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success(msg);
     refresh();
   }
@@ -228,7 +228,7 @@ function WorksAdmin() {
   async function remove(w: WorkRow) {
     if (!confirm(`Permanently delete "${w.headline || w.client}"? This cannot be undone.`)) return;
     const { error } = await supabase.from("cms_case_studies").delete().eq("id", w.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     if (w.cover_image_path) await supabase.storage.from(WORK_COVER_BUCKET).remove([w.cover_image_path]);
     if (editingId === w.id) setOpen(false);
     toast.success("Work deleted");
@@ -246,7 +246,7 @@ function WorksAdmin() {
   }
 
   const visible = works.filter((w) => w.archived === showArchived);
-  const field = (k: string) => errors[k] && <p className="mt-1 text-xs text-destructive">{errors[k]}</p>;
+  const field = (k: keyof Form) => errors[k] && <p className="mt-1 text-xs text-destructive">{errors[k]}</p>;
 
   return (
     <div className="space-y-8">
