@@ -13,7 +13,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as CareersRouteImport } from './routes/careers'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as PressRouteImport } from './routes/press'
@@ -24,6 +23,8 @@ import { Route as TeamRouteImport } from './routes/team'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as AuthenticatedIntelligenceRouteRouteImport } from './routes/_authenticated/intelligence/route'
+import { Route as CareersIndexRouteImport } from './routes/careers.index'
+import { Route as CareersSlugRouteImport } from './routes/careers.$slug'
 import { Route as InsightsIndexRouteImport } from './routes/insights.index'
 import { Route as InsightsSlugRouteImport } from './routes/insights.$slug'
 import { Route as IntelligenceIndexRouteImport } from './routes/intelligence.index'
@@ -65,11 +66,6 @@ const AboutRoute = AboutRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CareersRoute = CareersRouteImport.update({
-  id: '/careers',
-  path: '/careers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -123,6 +119,16 @@ const AuthenticatedIntelligenceRouteRoute =
     path: '/intelligence',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const CareersIndexRoute = CareersIndexRouteImport.update({
+  id: '/careers/',
+  path: '/careers/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CareersSlugRoute = CareersSlugRouteImport.update({
+  id: '/careers/$slug',
+  path: '/careers/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InsightsIndexRoute = InsightsIndexRouteImport.update({
   id: '/insights/',
   path: '/insights/',
@@ -257,7 +263,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
-  '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
   '/press': typeof PressRoute
@@ -268,10 +273,12 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/intelligence': typeof AuthenticatedIntelligenceRouteRouteWithChildren
+  '/careers/$slug': typeof CareersSlugRoute
   '/insights/$slug': typeof InsightsSlugRoute
   '/intelligence/dashboard': typeof IntelligenceDashboardRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/work/$slug': typeof WorkSlugRoute
+  '/careers/': typeof CareersIndexRoute
   '/insights/': typeof InsightsIndexRoute
   '/intelligence/': typeof IntelligenceIndexRoute
   '/services/': typeof ServicesIndexRoute
@@ -296,7 +303,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
-  '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
   '/press': typeof PressRoute
@@ -306,10 +312,12 @@ export interface FileRoutesByTo {
   '/team': typeof TeamRoute
   '/terms': typeof TermsRoute
   '/intelligence': typeof IntelligenceIndexRoute
+  '/careers/$slug': typeof CareersSlugRoute
   '/insights/$slug': typeof InsightsSlugRoute
   '/intelligence/dashboard': typeof IntelligenceDashboardRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/work/$slug': typeof WorkSlugRoute
+  '/careers': typeof CareersIndexRoute
   '/insights': typeof InsightsIndexRoute
   '/services': typeof ServicesIndexRoute
   '/work': typeof WorkIndexRoute
@@ -335,7 +343,6 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
-  '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
   '/press': typeof PressRoute
@@ -346,10 +353,12 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/_authenticated/intelligence': typeof AuthenticatedIntelligenceRouteRouteWithChildren
+  '/careers/$slug': typeof CareersSlugRoute
   '/insights/$slug': typeof InsightsSlugRoute
   '/intelligence/dashboard': typeof IntelligenceDashboardRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/work/$slug': typeof WorkSlugRoute
+  '/careers/': typeof CareersIndexRoute
   '/insights/': typeof InsightsIndexRoute
   '/intelligence/': typeof IntelligenceIndexRoute
   '/services/': typeof ServicesIndexRoute
@@ -376,7 +385,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
-    | '/careers'
     | '/contact'
     | '/cookies'
     | '/press'
@@ -387,10 +395,12 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin'
     | '/intelligence'
+    | '/careers/$slug'
     | '/insights/$slug'
     | '/intelligence/dashboard'
     | '/services/$slug'
     | '/work/$slug'
+    | '/careers/'
     | '/insights/'
     | '/intelligence/'
     | '/services/'
@@ -415,7 +425,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
-    | '/careers'
     | '/contact'
     | '/cookies'
     | '/press'
@@ -425,10 +434,12 @@ export interface FileRouteTypes {
     | '/team'
     | '/terms'
     | '/intelligence'
+    | '/careers/$slug'
     | '/insights/$slug'
     | '/intelligence/dashboard'
     | '/services/$slug'
     | '/work/$slug'
+    | '/careers'
     | '/insights'
     | '/services'
     | '/work'
@@ -453,7 +464,6 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/about'
     | '/auth'
-    | '/careers'
     | '/contact'
     | '/cookies'
     | '/press'
@@ -464,10 +474,12 @@ export interface FileRouteTypes {
     | '/terms'
     | '/_authenticated/admin'
     | '/_authenticated/intelligence'
+    | '/careers/$slug'
     | '/insights/$slug'
     | '/intelligence/dashboard'
     | '/services/$slug'
     | '/work/$slug'
+    | '/careers/'
     | '/insights/'
     | '/intelligence/'
     | '/services/'
@@ -494,7 +506,6 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
-  CareersRoute: typeof CareersRoute
   ContactRoute: typeof ContactRoute
   CookiesRoute: typeof CookiesRoute
   PressRoute: typeof PressRoute
@@ -503,10 +514,12 @@ export interface RootRouteChildren {
   SearchRoute: typeof SearchRoute
   TeamRoute: typeof TeamRoute
   TermsRoute: typeof TermsRoute
+  CareersSlugRoute: typeof CareersSlugRoute
   InsightsSlugRoute: typeof InsightsSlugRoute
   IntelligenceDashboardRoute: typeof IntelligenceDashboardRoute
   ServicesSlugRoute: typeof ServicesSlugRoute
   WorkSlugRoute: typeof WorkSlugRoute
+  CareersIndexRoute: typeof CareersIndexRoute
   InsightsIndexRoute: typeof InsightsIndexRoute
   IntelligenceIndexRoute: typeof IntelligenceIndexRoute
   ServicesIndexRoute: typeof ServicesIndexRoute
@@ -541,13 +554,6 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/careers': {
-      id: '/careers'
-      path: '/careers'
-      fullPath: '/careers'
-      preLoaderRoute: typeof CareersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -619,6 +625,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/intelligence'
       preLoaderRoute: typeof AuthenticatedIntelligenceRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/careers/': {
+      id: '/careers/'
+      path: '/careers'
+      fullPath: '/careers/'
+      preLoaderRoute: typeof CareersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/careers/$slug': {
+      id: '/careers/$slug'
+      path: '/careers/$slug'
+      fullPath: '/careers/$slug'
+      preLoaderRoute: typeof CareersSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/insights/': {
       id: '/insights/'
@@ -865,7 +885,6 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
-  CareersRoute: CareersRoute,
   ContactRoute: ContactRoute,
   CookiesRoute: CookiesRoute,
   PressRoute: PressRoute,
@@ -874,10 +893,12 @@ const rootRouteChildren: RootRouteChildren = {
   SearchRoute: SearchRoute,
   TeamRoute: TeamRoute,
   TermsRoute: TermsRoute,
+  CareersSlugRoute: CareersSlugRoute,
   InsightsSlugRoute: InsightsSlugRoute,
   IntelligenceDashboardRoute: IntelligenceDashboardRoute,
   ServicesSlugRoute: ServicesSlugRoute,
   WorkSlugRoute: WorkSlugRoute,
+  CareersIndexRoute: CareersIndexRoute,
   InsightsIndexRoute: InsightsIndexRoute,
   IntelligenceIndexRoute: IntelligenceIndexRoute,
   ServicesIndexRoute: ServicesIndexRoute,

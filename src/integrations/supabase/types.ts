@@ -94,9 +94,15 @@ export type Database = {
       }
       cms_careers: {
         Row: {
+          application_url: string | null
+          archived: boolean
+          benefits: string[]
+          closing_date: string | null
           created_at: string
+          department: string | null
           detail: string
           employment_type: string
+          full_description: string | null
           id: string
           location: string
           published: boolean
@@ -108,9 +114,15 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          application_url?: string | null
+          archived?: boolean
+          benefits?: string[]
+          closing_date?: string | null
           created_at?: string
+          department?: string | null
           detail?: string
           employment_type?: string
+          full_description?: string | null
           id?: string
           location?: string
           published?: boolean
@@ -122,9 +134,15 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          application_url?: string | null
+          archived?: boolean
+          benefits?: string[]
+          closing_date?: string | null
           created_at?: string
+          department?: string | null
           detail?: string
           employment_type?: string
+          full_description?: string | null
           id?: string
           location?: string
           published?: boolean
