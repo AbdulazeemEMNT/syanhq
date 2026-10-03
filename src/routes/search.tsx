@@ -57,6 +57,21 @@ const staticIndex: Result[] = [
 
 function SearchPage() {
   const [query, setQuery] = useState("");
+  const { data: works = [] } = useQuery(worksQuery);
+
+  const index = useMemo<Result[]>(
+    () => [
+      ...staticIndex,
+      ...works.map((c) => ({
+        title: c.client,
+        kind: "Case study",
+        text: `${c.headline} ${c.summary} ${c.sector}`,
+        to: "/work/$slug",
+        params: { slug: c.slug },
+      })),
+    ],
+    [works],
+  );
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
