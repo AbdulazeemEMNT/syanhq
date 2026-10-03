@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_authenticated/admin/integrations/")({
+export const Route = createFileRoute("/_authenticated/intelligence/integrations/")({
   component: IntegrationsPage,
 });
 

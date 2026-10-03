@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_authenticated/admin/projects/")({
+export const Route = createFileRoute("/_authenticated/intelligence/projects/")({
   component: ProjectsPage,
 });
 
@@ -79,7 +79,7 @@ function ProjectsPage() {
             <li key={p.id} className="flex flex-wrap items-center justify-between gap-3 py-4">
               <div>
                 <Link
-                  to="/admin/projects/$id"
+                  to="/intelligence/projects/$id"
                   params={{ id: p.id }}
                   className="font-serif text-lg font-bold hover:text-accent"
                 >
@@ -92,7 +92,7 @@ function ProjectsPage() {
               </div>
               <div className="flex items-center gap-2">
                 <Link
-                  to="/admin/projects/$id"
+                  to="/intelligence/projects/$id"
                   params={{ id: p.id }}
                   className="rounded-full border border-hairline px-4 py-2 text-xs font-semibold"
                 >

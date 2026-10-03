@@ -36,6 +36,13 @@
       "when": 1790791361730,
       "tag": "0004_syan_cms_tables",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1791049563850,
+      "tag": "0005_cms_articles_and_contact_messages",
+      "breakpoints": true
     }
   ]
 }

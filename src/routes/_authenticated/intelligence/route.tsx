@@ -5,19 +5,26 @@ import { useMyRoles, useSession } from "@/lib/admin-data";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_authenticated/admin")({
-  component: AdminLayout,
+export const Route = createFileRoute("/_authenticated/intelligence")({
+  component: IntelligenceLayout,
 });
 
 const nav = [
-  { to: "/admin", label: "Overview", exact: true },
-  { to: "/admin/works", label: "Works" },
-  { to: "/admin/articles", label: "Articles" },
-  { to: "/admin/careers", label: "Careers" },
-  { to: "/admin/messages", label: "Messages" },
+  { to: "/intelligence/overview", label: "Overview", exact: true },
+  { to: "/intelligence/mentions", label: "Mentions" },
+  { to: "/intelligence/topics", label: "Topics" },
+  { to: "/intelligence/competitors", label: "Competitors" },
+  { to: "/intelligence/reports", label: "Reports" },
+  { to: "/intelligence/ask", label: "Ask SYAN" },
 ] as const;
 
-function AdminLayout() {
+const secondaryNav = [
+  { to: "/intelligence/projects", label: "Projects" },
+  { to: "/intelligence/integrations", label: "Integrations & API" },
+  { to: "/intelligence/users", label: "Users & Roles" },
+] as const;
+
+function IntelligenceLayout() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { data: user } = useSession();
@@ -52,15 +59,9 @@ function AdminLayout() {
             <Link to="/" className="font-serif text-lg font-bold">
               SYAN
             </Link>
-            <span className="eyebrow">Website Content</span>
+            <span className="eyebrow">SYAN Intelligence</span>
           </div>
           <div className="flex items-center gap-3 text-sm">
-            <Link
-              to="/intelligence/overview"
-              className="text-xs font-semibold text-muted-foreground underline underline-offset-4 hover:text-foreground"
-            >
-              SYAN Intelligence
-            </Link>
             <span className="text-muted-foreground">{user?.email}</span>
             <span className="rounded-full border border-hairline px-3 py-1 text-xs">
               {roles.length ? roles.join(", ") : "no role"}
@@ -82,6 +83,17 @@ function AdminLayout() {
               {item.label}
             </Link>
           ))}
+          <span className="mx-2 w-px self-stretch bg-hairline" />
+          {secondaryNav.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              activeProps={{ className: "bg-navy text-navy-foreground border-navy" }}
+              className="rounded-full border border-hairline px-4 py-2 text-xs font-semibold text-muted-foreground"
+            >
+              {item.label}
+            </Link>
+          ))}
         </div>
       </header>
 
@@ -91,7 +103,7 @@ function AdminLayout() {
             <div>
               <p className="font-serif text-base font-bold">No staff role assigned</p>
               <p className="mt-1 text-sm text-muted-foreground">
-                You can see this shell, but content data stays hidden until an admin grants you a
+                You can see this shell, but project data stays hidden until an admin grants you a
                 role. If this is a new workspace, claim the first admin seat.
               </p>
             </div>
