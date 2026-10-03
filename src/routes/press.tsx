@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowRight } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero, Section, SectionHeading } from "@/components/site/Primitives";
-import { caseStudies } from "@/content/site";
+import { worksQuery } from "@/routes/work.index";
 
 export const Route = createFileRoute("/press")({
   head: () => ({
@@ -21,14 +22,15 @@ export const Route = createFileRoute("/press")({
       },
     ],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(worksQuery),
   component: PressCoverage,
 });
 
-const pressCases = caseStudies.filter((c) =>
-  c.services.some((s) => s.toLowerCase().includes("media coverage")),
-);
-
 function PressCoverage() {
+  const { data: works } = useSuspenseQuery(worksQuery);
+  const pressCases = works.filter((c) =>
+    c.services.some((s) => s.toLowerCase().includes("media coverage")),
+  );
   return (
     <SiteLayout>
       <PageHero
