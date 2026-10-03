@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowRight } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero, Section, SectionHeading } from "@/components/site/Primitives";
-import { caseStudies } from "@/content/site";
+import { worksQuery } from "@/routes/work.index";
 
 export const Route = createFileRoute("/press")({
   head: () => ({
@@ -21,14 +22,15 @@ export const Route = createFileRoute("/press")({
       },
     ],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(worksQuery),
   component: PressCoverage,
 });
 
-const pressCases = caseStudies.filter((c) =>
-  c.services.some((s) => s.toLowerCase().includes("media coverage")),
-);
-
 function PressCoverage() {
+  const { data: works } = useSuspenseQuery(worksQuery);
+  const pressCases = works.filter((c) =>
+    c.services.some((s) => s.toLowerCase().includes("media coverage")),
+  );
   return (
     <SiteLayout>
       <PageHero
@@ -38,6 +40,14 @@ function PressCoverage() {
       />
 
       <Section>
+        {pressCases.length === 0 ? (
+          <div className="soft-card p-10 text-center">
+            <p className="font-serif text-xl font-bold">Press highlights are on the way.</p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              In the meantime, <Link to="/contact" className="text-accent underline">talk to us</Link> about your story.
+            </p>
+          </div>
+        ) : (
         <div className="grid gap-5 md:grid-cols-2">
           {pressCases.map((c) => (
             <Link
@@ -58,6 +68,7 @@ function PressCoverage() {
             </Link>
           ))}
         </div>
+        )}
       </Section>
 
       <div className="border-t border-hairline bg-secondary">

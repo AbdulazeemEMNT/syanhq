@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowRight } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Section, SectionHeading, GoldLink, Eyebrow } from "@/components/site/Primitives";
 import { Marquee } from "@/components/site/Marquee";
-import { serviceGroups, caseStudies, insights, process, clientSectors } from "@/content/site";
+import { serviceGroups, insights, process, clientSectors } from "@/content/site";
+import { worksQuery } from "@/routes/work.index";
 import { bouquets } from "@/content/pricing";
 import teamCollab from "@/assets/team-collab.jpg";
 import strategyRoom from "@/assets/strategy-room.jpg";
@@ -26,6 +28,7 @@ export const Route = createFileRoute("/")({
       },
     ],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(worksQuery),
   component: Index,
 });
 
@@ -62,6 +65,7 @@ const stats = [
 ];
 
 function Index() {
+  const { data: works } = useSuspenseQuery(worksQuery);
   return (
     <SiteLayout>
       {/* Hero */}
@@ -305,7 +309,7 @@ function Index() {
             <GoldLink to="/work">All case studies</GoldLink>
           </div>
           <div className="mt-12 grid gap-5 md:grid-cols-3">
-            {caseStudies.slice(0, 3).map((c) => (
+            {works.slice(0, 3).map((c) => (
               <Link
                 key={c.slug}
                 to="/work/$slug"

@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Search as SearchIcon } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero, Section } from "@/components/site/Primitives";
-import { services, caseStudies, insights, team, careers } from "@/content/site";
+import { services, insights, team, careers } from "@/content/site";
+import { worksQuery } from "@/routes/work.index";
 
 export const Route = createFileRoute("/search")({
   head: () => ({
@@ -23,20 +25,13 @@ export const Route = createFileRoute("/search")({
 
 type Result = { title: string; kind: string; text: string; to: string; params?: { slug: string } };
 
-const index: Result[] = [
+const staticIndex: Result[] = [
   ...services.map((s) => ({
     title: s.name,
     kind: "Service",
     text: `${s.summary} ${s.capabilities.map((c) => c.title).join(" ")}`,
     to: "/services/$slug",
     params: { slug: s.slug },
-  })),
-  ...caseStudies.map((c) => ({
-    title: c.client,
-    kind: "Case study",
-    text: `${c.headline} ${c.summary} ${c.sector}`,
-    to: "/work/$slug",
-    params: { slug: c.slug },
   })),
   ...insights.map((i) => ({
     title: i.title,
@@ -62,6 +57,21 @@ const index: Result[] = [
 
 function SearchPage() {
   const [query, setQuery] = useState("");
+  const { data: works = [] } = useQuery(worksQuery);
+
+  const index = useMemo<Result[]>(
+    () => [
+      ...staticIndex,
+      ...works.map((c) => ({
+        title: c.client,
+        kind: "Case study",
+        text: `${c.headline} ${c.summary} ${c.sector}`,
+        to: "/work/$slug",
+        params: { slug: c.slug },
+      })),
+    ],
+    [works],
+  );
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -69,7 +79,7 @@ function SearchPage() {
     return index.filter(
       (r) => r.title.toLowerCase().includes(q) || r.text.toLowerCase().includes(q),
     );
-  }, [query]);
+  }, [query, index]);
 
   return (
     <SiteLayout>
