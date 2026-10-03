@@ -23,6 +23,7 @@ import { Route as SearchRouteImport } from './routes/search'
 import { Route as TeamRouteImport } from './routes/team'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
+import { Route as AuthenticatedIntelligenceRouteRouteImport } from './routes/_authenticated/intelligence/route'
 import { Route as InsightsIndexRouteImport } from './routes/insights.index'
 import { Route as InsightsSlugRouteImport } from './routes/insights.$slug'
 import { Route as IntelligenceIndexRouteImport } from './routes/intelligence.index'
@@ -32,6 +33,8 @@ import { Route as ServicesSlugRouteImport } from './routes/services.$slug'
 import { Route as WorkIndexRouteImport } from './routes/work.index'
 import { Route as WorkSlugRouteImport } from './routes/work.$slug'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
+import { Route as AuthenticatedIntelligenceAskRouteImport } from './routes/_authenticated/intelligence/ask'
+import { Route as AuthenticatedIntelligenceOverviewRouteImport } from './routes/_authenticated/intelligence/overview'
 import { Route as AuthenticatedIntelligenceIntegrationsIndexRouteImport } from './routes/_authenticated/intelligence/integrations.index'
 import { Route as AuthenticatedIntelligenceProjectsIndexRouteImport } from './routes/_authenticated/intelligence/projects.index'
 import { Route as AuthenticatedIntelligenceProjectsIdRouteImport } from './routes/_authenticated/intelligence/projects.$id'
@@ -106,6 +109,12 @@ const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedIntelligenceRouteRoute =
+  AuthenticatedIntelligenceRouteRouteImport.update({
+    id: '/intelligence',
+    path: '/intelligence',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const InsightsIndexRoute = InsightsIndexRouteImport.update({
   id: '/insights/',
   path: '/insights/',
@@ -151,29 +160,41 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRouteRoute,
 } as any)
+const AuthenticatedIntelligenceAskRoute =
+  AuthenticatedIntelligenceAskRouteImport.update({
+    id: '/ask',
+    path: '/ask',
+    getParentRoute: () => AuthenticatedIntelligenceRouteRoute,
+  } as any)
+const AuthenticatedIntelligenceOverviewRoute =
+  AuthenticatedIntelligenceOverviewRouteImport.update({
+    id: '/overview',
+    path: '/overview',
+    getParentRoute: () => AuthenticatedIntelligenceRouteRoute,
+  } as any)
 const AuthenticatedIntelligenceIntegrationsIndexRoute =
   AuthenticatedIntelligenceIntegrationsIndexRouteImport.update({
-    id: '/intelligence/integrations/',
-    path: '/intelligence/integrations/',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/integrations/',
+    path: '/integrations/',
+    getParentRoute: () => AuthenticatedIntelligenceRouteRoute,
   } as any)
 const AuthenticatedIntelligenceProjectsIndexRoute =
   AuthenticatedIntelligenceProjectsIndexRouteImport.update({
-    id: '/intelligence/projects/',
-    path: '/intelligence/projects/',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/projects/',
+    path: '/projects/',
+    getParentRoute: () => AuthenticatedIntelligenceRouteRoute,
   } as any)
 const AuthenticatedIntelligenceProjectsIdRoute =
   AuthenticatedIntelligenceProjectsIdRouteImport.update({
-    id: '/intelligence/projects/$id',
-    path: '/intelligence/projects/$id',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/projects/$id',
+    path: '/projects/$id',
+    getParentRoute: () => AuthenticatedIntelligenceRouteRoute,
   } as any)
 const AuthenticatedIntelligenceUsersIndexRoute =
   AuthenticatedIntelligenceUsersIndexRouteImport.update({
-    id: '/intelligence/users/',
-    path: '/intelligence/users/',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/users/',
+    path: '/users/',
+    getParentRoute: () => AuthenticatedIntelligenceRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -190,6 +211,7 @@ export interface FileRoutesByFullPath {
   '/team': typeof TeamRoute
   '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
+  '/intelligence': typeof AuthenticatedIntelligenceRouteRouteWithChildren
   '/insights/$slug': typeof InsightsSlugRoute
   '/intelligence/dashboard': typeof IntelligenceDashboardRoute
   '/services/$slug': typeof ServicesSlugRoute
@@ -198,6 +220,8 @@ export interface FileRoutesByFullPath {
   '/intelligence/': typeof IntelligenceIndexRoute
   '/services/': typeof ServicesIndexRoute
   '/work/': typeof WorkIndexRoute
+  '/intelligence/ask': typeof AuthenticatedIntelligenceAskRoute
+  '/intelligence/overview': typeof AuthenticatedIntelligenceOverviewRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/intelligence/projects/$id': typeof AuthenticatedIntelligenceProjectsIdRoute
   '/intelligence/integrations/': typeof AuthenticatedIntelligenceIntegrationsIndexRoute
@@ -217,14 +241,16 @@ export interface FileRoutesByTo {
   '/search': typeof SearchRoute
   '/team': typeof TeamRoute
   '/terms': typeof TermsRoute
+  '/intelligence': typeof IntelligenceIndexRoute
   '/insights/$slug': typeof InsightsSlugRoute
   '/intelligence/dashboard': typeof IntelligenceDashboardRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/work/$slug': typeof WorkSlugRoute
   '/insights': typeof InsightsIndexRoute
-  '/intelligence': typeof IntelligenceIndexRoute
   '/services': typeof ServicesIndexRoute
   '/work': typeof WorkIndexRoute
+  '/intelligence/ask': typeof AuthenticatedIntelligenceAskRoute
+  '/intelligence/overview': typeof AuthenticatedIntelligenceOverviewRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/intelligence/projects/$id': typeof AuthenticatedIntelligenceProjectsIdRoute
   '/intelligence/integrations': typeof AuthenticatedIntelligenceIntegrationsIndexRoute
@@ -247,6 +273,7 @@ export interface FileRoutesById {
   '/team': typeof TeamRoute
   '/terms': typeof TermsRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
+  '/_authenticated/intelligence': typeof AuthenticatedIntelligenceRouteRouteWithChildren
   '/insights/$slug': typeof InsightsSlugRoute
   '/intelligence/dashboard': typeof IntelligenceDashboardRoute
   '/services/$slug': typeof ServicesSlugRoute
@@ -255,6 +282,8 @@ export interface FileRoutesById {
   '/intelligence/': typeof IntelligenceIndexRoute
   '/services/': typeof ServicesIndexRoute
   '/work/': typeof WorkIndexRoute
+  '/_authenticated/intelligence/ask': typeof AuthenticatedIntelligenceAskRoute
+  '/_authenticated/intelligence/overview': typeof AuthenticatedIntelligenceOverviewRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/intelligence/projects/$id': typeof AuthenticatedIntelligenceProjectsIdRoute
   '/_authenticated/intelligence/integrations/': typeof AuthenticatedIntelligenceIntegrationsIndexRoute
@@ -277,6 +306,7 @@ export interface FileRouteTypes {
     | '/team'
     | '/terms'
     | '/admin'
+    | '/intelligence'
     | '/insights/$slug'
     | '/intelligence/dashboard'
     | '/services/$slug'
@@ -285,6 +315,8 @@ export interface FileRouteTypes {
     | '/intelligence/'
     | '/services/'
     | '/work/'
+    | '/intelligence/ask'
+    | '/intelligence/overview'
     | '/admin/'
     | '/intelligence/projects/$id'
     | '/intelligence/integrations/'
@@ -304,14 +336,16 @@ export interface FileRouteTypes {
     | '/search'
     | '/team'
     | '/terms'
+    | '/intelligence'
     | '/insights/$slug'
     | '/intelligence/dashboard'
     | '/services/$slug'
     | '/work/$slug'
     | '/insights'
-    | '/intelligence'
     | '/services'
     | '/work'
+    | '/intelligence/ask'
+    | '/intelligence/overview'
     | '/admin'
     | '/intelligence/projects/$id'
     | '/intelligence/integrations'
@@ -333,6 +367,7 @@ export interface FileRouteTypes {
     | '/team'
     | '/terms'
     | '/_authenticated/admin'
+    | '/_authenticated/intelligence'
     | '/insights/$slug'
     | '/intelligence/dashboard'
     | '/services/$slug'
@@ -341,6 +376,8 @@ export interface FileRouteTypes {
     | '/intelligence/'
     | '/services/'
     | '/work/'
+    | '/_authenticated/intelligence/ask'
+    | '/_authenticated/intelligence/overview'
     | '/_authenticated/admin/'
     | '/_authenticated/intelligence/projects/$id'
     | '/_authenticated/intelligence/integrations/'
@@ -472,6 +509,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/intelligence': {
+      id: '/_authenticated/intelligence'
+      path: '/intelligence'
+      fullPath: '/intelligence'
+      preLoaderRoute: typeof AuthenticatedIntelligenceRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/insights/': {
       id: '/insights/'
       path: '/insights'
@@ -535,33 +579,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/intelligence/ask': {
+      id: '/_authenticated/intelligence/ask'
+      path: '/ask'
+      fullPath: '/intelligence/ask'
+      preLoaderRoute: typeof AuthenticatedIntelligenceAskRouteImport
+      parentRoute: typeof AuthenticatedIntelligenceRouteRoute
+    }
+    '/_authenticated/intelligence/overview': {
+      id: '/_authenticated/intelligence/overview'
+      path: '/overview'
+      fullPath: '/intelligence/overview'
+      preLoaderRoute: typeof AuthenticatedIntelligenceOverviewRouteImport
+      parentRoute: typeof AuthenticatedIntelligenceRouteRoute
+    }
     '/_authenticated/intelligence/integrations/': {
       id: '/_authenticated/intelligence/integrations/'
-      path: '/intelligence/integrations'
+      path: '/integrations'
       fullPath: '/intelligence/integrations/'
       preLoaderRoute: typeof AuthenticatedIntelligenceIntegrationsIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedIntelligenceRouteRoute
     }
     '/_authenticated/intelligence/projects/': {
       id: '/_authenticated/intelligence/projects/'
-      path: '/intelligence/projects'
+      path: '/projects'
       fullPath: '/intelligence/projects/'
       preLoaderRoute: typeof AuthenticatedIntelligenceProjectsIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedIntelligenceRouteRoute
     }
     '/_authenticated/intelligence/projects/$id': {
       id: '/_authenticated/intelligence/projects/$id'
-      path: '/intelligence/projects/$id'
+      path: '/projects/$id'
       fullPath: '/intelligence/projects/$id'
       preLoaderRoute: typeof AuthenticatedIntelligenceProjectsIdRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedIntelligenceRouteRoute
     }
     '/_authenticated/intelligence/users/': {
       id: '/_authenticated/intelligence/users/'
-      path: '/intelligence/users'
+      path: '/users'
       fullPath: '/intelligence/users/'
       preLoaderRoute: typeof AuthenticatedIntelligenceUsersIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedIntelligenceRouteRoute
     }
   }
 }
@@ -580,24 +638,44 @@ const AuthenticatedAdminRouteRouteWithChildren =
     AuthenticatedAdminRouteRouteChildren,
   )
 
-interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
+interface AuthenticatedIntelligenceRouteRouteChildren {
+  AuthenticatedIntelligenceAskRoute: typeof AuthenticatedIntelligenceAskRoute
+  AuthenticatedIntelligenceOverviewRoute: typeof AuthenticatedIntelligenceOverviewRoute
   AuthenticatedIntelligenceProjectsIdRoute: typeof AuthenticatedIntelligenceProjectsIdRoute
   AuthenticatedIntelligenceIntegrationsIndexRoute: typeof AuthenticatedIntelligenceIntegrationsIndexRoute
   AuthenticatedIntelligenceProjectsIndexRoute: typeof AuthenticatedIntelligenceProjectsIndexRoute
   AuthenticatedIntelligenceUsersIndexRoute: typeof AuthenticatedIntelligenceUsersIndexRoute
 }
 
+const AuthenticatedIntelligenceRouteRouteChildren: AuthenticatedIntelligenceRouteRouteChildren =
+  {
+    AuthenticatedIntelligenceAskRoute: AuthenticatedIntelligenceAskRoute,
+    AuthenticatedIntelligenceOverviewRoute:
+      AuthenticatedIntelligenceOverviewRoute,
+    AuthenticatedIntelligenceProjectsIdRoute:
+      AuthenticatedIntelligenceProjectsIdRoute,
+    AuthenticatedIntelligenceIntegrationsIndexRoute:
+      AuthenticatedIntelligenceIntegrationsIndexRoute,
+    AuthenticatedIntelligenceProjectsIndexRoute:
+      AuthenticatedIntelligenceProjectsIndexRoute,
+    AuthenticatedIntelligenceUsersIndexRoute:
+      AuthenticatedIntelligenceUsersIndexRoute,
+  }
+
+const AuthenticatedIntelligenceRouteRouteWithChildren =
+  AuthenticatedIntelligenceRouteRoute._addFileChildren(
+    AuthenticatedIntelligenceRouteRouteChildren,
+  )
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
+  AuthenticatedIntelligenceRouteRoute: typeof AuthenticatedIntelligenceRouteRouteWithChildren
+}
+
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
-  AuthenticatedIntelligenceProjectsIdRoute:
-    AuthenticatedIntelligenceProjectsIdRoute,
-  AuthenticatedIntelligenceIntegrationsIndexRoute:
-    AuthenticatedIntelligenceIntegrationsIndexRoute,
-  AuthenticatedIntelligenceProjectsIndexRoute:
-    AuthenticatedIntelligenceProjectsIndexRoute,
-  AuthenticatedIntelligenceUsersIndexRoute:
-    AuthenticatedIntelligenceUsersIndexRoute,
+  AuthenticatedIntelligenceRouteRoute:
+    AuthenticatedIntelligenceRouteRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =

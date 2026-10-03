@@ -11,11 +11,10 @@ export const Route = createFileRoute("/_authenticated/admin")({
 
 const nav = [
   { to: "/admin", label: "Overview", exact: true },
-  { to: "/admin/projects", label: "Projects" },
-  { to: "/admin/alerts", label: "Alerts" },
-  { to: "/admin/reports", label: "Reports" },
-  { to: "/admin/integrations", label: "Integrations & API" },
-  { to: "/admin/users", label: "Users & Roles" },
+  { to: "/admin/works", label: "Works" },
+  { to: "/admin/articles", label: "Articles" },
+  { to: "/admin/careers", label: "Careers" },
+  { to: "/admin/messages", label: "Messages" },
 ] as const;
 
 function AdminLayout() {
@@ -53,9 +52,15 @@ function AdminLayout() {
             <Link to="/" className="font-serif text-lg font-bold">
               SYAN
             </Link>
-            <span className="eyebrow">Intelligence Admin</span>
+            <span className="eyebrow">Website Content</span>
           </div>
           <div className="flex items-center gap-3 text-sm">
+            <Link
+              to="/intelligence/overview"
+              className="text-xs font-semibold text-muted-foreground underline underline-offset-4 hover:text-foreground"
+            >
+              SYAN Intelligence
+            </Link>
             <span className="text-muted-foreground">{user?.email}</span>
             <span className="rounded-full border border-hairline px-3 py-1 text-xs">
               {roles.length ? roles.join(", ") : "no role"}
@@ -86,7 +91,7 @@ function AdminLayout() {
             <div>
               <p className="font-serif text-base font-bold">No staff role assigned</p>
               <p className="mt-1 text-sm text-muted-foreground">
-                You can see this shell, but project data stays hidden until an admin grants you a
+                You can see this shell, but content data stays hidden until an admin grants you a
                 role. If this is a new workspace, claim the first admin seat.
               </p>
             </div>
