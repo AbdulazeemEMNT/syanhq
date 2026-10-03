@@ -65,6 +65,7 @@ const stats = [
 ];
 
 function Index() {
+  const { data: works } = useSuspenseQuery(worksQuery);
   return (
     <SiteLayout>
       {/* Hero */}
@@ -308,7 +309,7 @@ function Index() {
             <GoldLink to="/work">All case studies</GoldLink>
           </div>
           <div className="mt-12 grid gap-5 md:grid-cols-3">
-            {caseStudies.slice(0, 3).map((c) => (
+            {works.slice(0, 3).map((c) => (
               <Link
                 key={c.slug}
                 to="/work/$slug"
