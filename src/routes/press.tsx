@@ -68,6 +68,7 @@ function PressCoverage() {
             </Link>
           ))}
         </div>
+        )}
       </Section>
 
       <div className="border-t border-hairline bg-secondary">
