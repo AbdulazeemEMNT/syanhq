@@ -146,7 +146,7 @@ function CareersAdmin() {
 
   async function update(id: string, patch: Partial<CareerRow>, msg: string) {
     const { error } = await supabase.from("cms_careers").update(patch).eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success(msg);
     refresh();
   }
@@ -154,7 +154,7 @@ function CareersAdmin() {
   async function remove(c: CareerRow) {
     if (!confirm(`Delete "${c.title}" permanently?`)) return;
     const { error } = await supabase.from("cms_careers").delete().eq("id", c.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     if (editingId === c.id) reset();
     toast.success("Position deleted");
     refresh();
