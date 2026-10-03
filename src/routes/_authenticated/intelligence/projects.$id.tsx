@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_authenticated/admin/projects/$id")({
+export const Route = createFileRoute("/_authenticated/intelligence/projects/$id")({
   component: ProjectDetail,
 });
 
@@ -49,7 +49,7 @@ function ProjectDetail() {
     return (
       <div className="soft-card p-8">
         <p className="font-serif text-lg font-bold">Project not found</p>
-        <Link to="/admin/projects" className="mt-3 inline-block text-sm underline">
+        <Link to="/intelligence/projects" className="mt-3 inline-block text-sm underline">
           Back to projects
         </Link>
       </div>
@@ -58,7 +58,7 @@ function ProjectDetail() {
   return (
     <div className="space-y-6">
       <div className="soft-card p-8">
-        <Link to="/admin/projects" className="eyebrow">
+        <Link to="/intelligence/projects" className="eyebrow">
           ← Projects
         </Link>
         <h1 className="display-lg mt-4 text-3xl">{project.name}</h1>
