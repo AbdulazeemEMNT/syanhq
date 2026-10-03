@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      cms_articles: {
+        Row: {
+          body: string | null
+          category: string
+          created_at: string
+          excerpt: string | null
+          id: string
+          published: boolean
+          reading_time: string | null
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          body?: string | null
+          category?: string
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          published?: boolean
+          reading_time?: string | null
+          slug: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string | null
+          category?: string
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          published?: boolean
+          reading_time?: string | null
+          slug?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       cms_brands: {
         Row: {
           created_at: string
@@ -251,6 +290,39 @@ export type Database = {
           slug?: string
           sort_order?: number
           updated_at?: string
+        }
+        Relationships: []
+      }
+      contact_messages: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          interest: string | null
+          message: string
+          name: string
+          organisation: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          interest?: string | null
+          message: string
+          name: string
+          organisation?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          interest?: string | null
+          message?: string
+          name?: string
+          organisation?: string | null
+          status?: string
         }
         Relationships: []
       }
