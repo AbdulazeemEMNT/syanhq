@@ -79,7 +79,7 @@ function SearchPage() {
     return index.filter(
       (r) => r.title.toLowerCase().includes(q) || r.text.toLowerCase().includes(q),
     );
-  }, [query]);
+  }, [query, index]);
 
   return (
     <SiteLayout>
