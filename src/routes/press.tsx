@@ -40,6 +40,14 @@ function PressCoverage() {
       />
 
       <Section>
+        {pressCases.length === 0 ? (
+          <div className="soft-card p-10 text-center">
+            <p className="font-serif text-xl font-bold">Press highlights are on the way.</p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              In the meantime, <Link to="/contact" className="text-accent underline">talk to us</Link> about your story.
+            </p>
+          </div>
+        ) : (
         <div className="grid gap-5 md:grid-cols-2">
           {pressCases.map((c) => (
             <Link
