@@ -1,7 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero, Section } from "@/components/site/Primitives";
-import { caseStudies, clientSectors } from "@/content/site";
+import { clientSectors } from "@/content/site";
+import { listPublishedWorks } from "@/lib/works.functions";
+
+export const worksQuery = queryOptions({
+  queryKey: ["public-works"],
+  queryFn: () => listPublishedWorks(),
+});
 
 export const Route = createFileRoute("/work/")({
   head: () => ({
@@ -17,12 +24,38 @@ export const Route = createFileRoute("/work/")({
         property: "og:description",
         content: "Over 25 industry leaders trust SYAN Media to tell their story.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(worksQuery),
+  pendingComponent: () => (
+    <SiteLayout>
+      <Section>
+        <div className="grid gap-5 md:grid-cols-2">
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} className="soft-card h-64 animate-pulse" />
+          ))}
+        </div>
+      </Section>
+    </SiteLayout>
+  ),
+  errorComponent: ({ reset }) => (
+    <SiteLayout>
+      <Section>
+        <p className="eyebrow">Our Work</p>
+        <p className="mt-4 font-serif text-2xl font-bold">We couldn't load our case studies.</p>
+        <button onClick={reset} className="mt-6 rounded-full border border-hairline px-5 py-2 text-sm">
+          Try again
+        </button>
+      </Section>
+    </SiteLayout>
+  ),
   component: WorkIndex,
 });
 
 function WorkIndex() {
+  const { data: works } = useSuspenseQuery(worksQuery);
   return (
     <SiteLayout>
       <PageHero
@@ -32,32 +65,49 @@ function WorkIndex() {
       />
 
       <Section>
-        <div className="grid gap-5 md:grid-cols-2">
-          {caseStudies.map((c) => (
-            <Link
-              key={c.slug}
-              to="/work/$slug"
-              params={{ slug: c.slug }}
-              className="group soft-card p-10 transition-colors hover:bg-secondary"
-            >
-              <p className="eyebrow">{c.sector}</p>
-              <p className="mt-5 font-serif font-bold text-2xl leading-snug group-hover:text-accent">
-                {c.client}
-              </p>
-              <p className="mt-3 text-base leading-relaxed text-muted-foreground">{c.headline}</p>
-              <p className="mt-6 flex flex-wrap gap-2">
-                {c.services.map((s) => (
-                  <span
-                    key={s}
-                    className="rounded-full border border-hairline px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-muted-foreground"
-                  >
-                    {s}
-                  </span>
-                ))}
-              </p>
-            </Link>
-          ))}
-        </div>
+        {works.length === 0 ? (
+          <div className="soft-card p-10 text-center">
+            <p className="font-serif text-xl font-bold">New case studies are on the way.</p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              In the meantime, <Link to="/contact" className="text-accent underline">talk to us</Link> about your brief.
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-5 md:grid-cols-2">
+            {works.map((c) => (
+              <Link
+                key={c.slug}
+                to="/work/$slug"
+                params={{ slug: c.slug }}
+                className="group soft-card overflow-hidden transition-colors hover:bg-secondary"
+              >
+                {c.coverUrl && (
+                  <img src={c.coverUrl} alt={c.client} loading="lazy" className="aspect-[16/9] w-full object-cover" />
+                )}
+                <div className="p-10">
+                  <p className="eyebrow">
+                    {c.sector}
+                    {c.featured && <span className="ml-2 text-accent">· Featured</span>}
+                  </p>
+                  <p className="mt-5 font-serif font-bold text-2xl leading-snug group-hover:text-accent">
+                    {c.client}
+                  </p>
+                  <p className="mt-3 text-base leading-relaxed text-muted-foreground">{c.headline}</p>
+                  <p className="mt-6 flex flex-wrap gap-2">
+                    {c.services.map((s) => (
+                      <span
+                        key={s}
+                        className="rounded-full border border-hairline px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-muted-foreground"
+                      >
+                        {s}
+                      </span>
+                    ))}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </Section>
 
       <div className="border-y border-hairline bg-secondary">
