@@ -21,3 +21,4 @@
 - Articles (public "Insights") live only in `cms_articles`; public pages read through publishable-key server functions showing `published AND NOT archived` with a publish date not in the future. Covers reuse the private `work-covers` bucket under `articles/`.
 - `/admin/*` access is resolved once in the admin layout's `beforeLoad` (via `my_permissions()`) after the `_authenticated` session gate; users with no permissions get a no-access screen with no CMS chrome. There is no self-service sign-up in the UI.
 - Intelligence client workspaces live in `intelligence_workspaces` (one per owner, owner-only RLS); users without a staff role and no workspace are redirected to `/intelligence-setup`.
+- Monitored mentions live in `intelligence_mentions` (per workspace); clients only read (owner or staff via RLS) and rows are written server-side by connected sources only — never seeded.
