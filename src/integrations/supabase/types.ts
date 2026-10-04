@@ -449,6 +449,7 @@ export type Database = {
           relevance: number | null
           sentiment: string | null
           source_name: string
+          subject: string | null
           title: string | null
           topic: string | null
           url: string | null
@@ -465,6 +466,7 @@ export type Database = {
           relevance?: number | null
           sentiment?: string | null
           source_name: string
+          subject?: string | null
           title?: string | null
           topic?: string | null
           url?: string | null
@@ -481,6 +483,7 @@ export type Database = {
           relevance?: number | null
           sentiment?: string | null
           source_name?: string
+          subject?: string | null
           title?: string | null
           topic?: string | null
           url?: string | null
