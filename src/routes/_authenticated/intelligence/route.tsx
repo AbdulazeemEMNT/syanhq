@@ -17,13 +17,10 @@ const nav = [
   { to: "/intelligence/competitors", label: "Competitors" },
   { to: "/intelligence/reports", label: "Reports" },
   { to: "/intelligence/ask", label: "Ask SYAN" },
+  { to: "/intelligence/settings", label: "Settings" },
 ] as const;
 
-const secondaryNav = [
-  { to: "/intelligence/projects", label: "Projects" },
-  { to: "/intelligence/integrations", label: "Integrations & API" },
-  { to: "/intelligence/users", label: "Users & Roles" },
-] as const;
+
 
 function IntelligenceLayout() {
   const navigate = useNavigate();
@@ -78,17 +75,7 @@ function IntelligenceLayout() {
               {item.label}
             </Link>
           ))}
-          <span className="mx-2 w-px self-stretch bg-hairline" />
-          {secondaryNav.map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              activeProps={{ className: "bg-navy text-navy-foreground border-navy" }}
-              className="rounded-full border border-hairline px-4 py-2 text-xs font-semibold text-muted-foreground"
-            >
-              {item.label}
-            </Link>
-          ))}
+          
         </div>
       </header>
 
