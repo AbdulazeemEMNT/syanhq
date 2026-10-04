@@ -77,6 +77,12 @@ function IntelligenceLanding() {
               See how it works
             </Link>
           </div>
+          <p className="mt-6 text-sm text-white/50">
+            Already have access?{" "}
+            <Link to="/auth" className="underline underline-offset-4 hover:text-[color:var(--gold)]">
+              Sign in
+            </Link>
+          </p>
 
           <div className="mt-20 grid gap-4 md:grid-cols-3">
             {pillars.map((p, i) => (
