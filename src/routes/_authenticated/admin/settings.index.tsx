@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PERMISSIONS, ROLE_PRESETS, presetLabel, type Permission } from "@/lib/permissions";
-import { inviteStaff, listStaff, removeStaff, updateStaff, type StaffRow } from "@/lib/staff.functions";
+import { inviteStaff, listInvitations, listStaff, removeStaff, revokeInvitation, updateStaff, type StaffRow } from "@/lib/staff.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/settings/")({
   component: StaffSettings,
@@ -61,9 +61,15 @@ function StaffSettings() {
   const invite = useServerFn(inviteStaff);
   const update = useServerFn(updateStaff);
   const remove = useServerFn(removeStaff);
+  const listInv = useServerFn(listInvitations);
+  const revoke = useServerFn(revokeInvitation);
+  const { data: invitations = [] } = useQuery({ queryKey: ["staff-invitations"], queryFn: () => listInv() });
 
   const { data: staff = [], isLoading, error } = useQuery({ queryKey: ["staff"], queryFn: () => list() });
-  const refresh = () => qc.invalidateQueries({ queryKey: ["staff"] });
+  const refresh = () => {
+    qc.invalidateQueries({ queryKey: ["staff"] });
+    qc.invalidateQueries({ queryKey: ["staff-invitations"] });
+  };
 
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -83,7 +89,11 @@ function StaffSettings() {
       const res = await invite({
         data: { email, full_name: name || undefined, role_preset: preset, permissions: perms, redirectTo: `${window.location.origin}/auth` },
       });
-      toast.success(res.invited ? `Invitation sent to ${email}` : `${email} already had an account — access granted`);
+      toast.success(
+        res.invited
+          ? `Invitation emailed to ${email}`
+          : `${email} is invited — access starts the next time they sign in`,
+      );
       setEmail("");
       setName("");
       refresh();
@@ -116,7 +126,7 @@ function StaffSettings() {
         <div>
           <h2 className="font-serif text-xl font-bold">Invite a staff member</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            They'll get an email invitation. There's no public sign-up — only invited people can get in.
+            Only invited emails can get in. They can accept by signing in with Google or the emailed link, using exactly this address. Invitations expire after 14 days.
           </p>
         </div>
         <div className="grid gap-4 md:grid-cols-2">
@@ -136,6 +146,34 @@ function StaffSettings() {
       </form>
 
       <div className="soft-card p-8">
+        <h2 className="font-serif text-xl font-bold">Pending invitations</h2>
+        {invitations.length === 0 ? (
+          <p className="mt-5 text-sm text-muted-foreground">No pending invitations.</p>
+        ) : (
+          <ul className="mt-4 divide-y divide-hairline">
+            {invitations.map((i) => (
+              <li key={i.id} className="flex flex-wrap items-center justify-between gap-3 py-4">
+                <div className="min-w-0">
+                  <p className="font-semibold">{i.full_name || i.email}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {i.email} · {presetLabel(i.role_preset)} · expires{" "}
+                    {new Date(i.expires_at).toLocaleDateString("en-GB")}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className={`rounded-full border border-hairline px-3 py-1 text-[11px] ${i.status === "expired" ? "text-destructive" : ""}`}>{i.status}</span>
+                  <Button variant="outline" size="sm" className="rounded-full"
+                    onClick={() => confirm(`Revoke the invitation for ${i.email}?`) && run(() => revoke({ data: { id: i.id } }), "Invitation revoked")}>
+                    Revoke
+                  </Button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div className="soft-card p-8">
         <h2 className="font-serif text-xl font-bold">Staff</h2>
         {isLoading ? (
           <p className="mt-5 text-sm text-muted-foreground">Loading staff…</p>
@@ -152,7 +190,7 @@ function StaffSettings() {
                     <p className="font-semibold">{s.full_name || s.email}</p>
                     <p className="text-xs text-muted-foreground">
                       {s.email} · {s.is_owner ? "Owner" : presetLabel(s.role_preset)} ·{" "}
-                      {s.last_sign_in_at ? "Has signed in" : "Invitation pending"}
+                      {s.last_sign_in_at ? "Has signed in" : "Not signed in yet"}
                     </p>
                     <div className="mt-2 flex flex-wrap gap-1">
                       {s.permissions.map((p) => (

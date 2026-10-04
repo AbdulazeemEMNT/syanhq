@@ -10,61 +10,11 @@ export type Alert = Tables<"project_alerts">;
 export type Report = Tables<"intelligence_reports">;
 export type Integration = Tables<"integrations">;
 
-const normalizeEmail = (value?: string | null) => value?.trim().toLowerCase();
-
-export function getConfiguredAdminEmails() {
-  const configured =
-    (import.meta.env["VITE_ALLOWED_ADMIN_EMAILS"] as string | undefined) ??
-    (typeof process !== "undefined" ? process.env["ALLOWED_ADMIN_EMAILS"] : undefined) ??
-    "";
-
-  return configured
-    .split(",")
-    .map((value) => normalizeEmail(value))
-    .filter(Boolean) as string[];
-}
-
-export function isConfiguredAdminEmail(email?: string | null) {
-  const normalized = normalizeEmail(email);
-  return normalized ? getConfiguredAdminEmails().includes(normalized) : false;
-}
-
-export async function ensureConfiguredAdminAccess(
-  user?: { id?: string | undefined; email?: string | null | undefined } | null,
-) {
-  if (!user?.id || !user.email) return false;
-  if (!isConfiguredAdminEmail(user.email)) return false;
-
-  const { data: existingRoles, error: rolesError } = await supabase
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", user.id);
-
-  if (rolesError) throw rolesError;
-  if ((existingRoles ?? []).some((row) => row.role === "admin")) return true;
-
-  const { data, error } = await supabase.rpc("claim_first_admin");
-  if (error) throw error;
-  return Boolean(data);
-}
-
-export async function getUserRolesForUser(userId?: string | null, email?: string | null) {
+export async function getUserRolesForUser(userId?: string | null) {
   if (!userId) return [] as string[];
-
   const { data, error } = await supabase.from("user_roles").select("role").eq("user_id", userId);
   if (error) throw error;
-
-  const roles = (data ?? []).map((row) => row.role as string);
-  if (isConfiguredAdminEmail(email) && !roles.includes("admin")) {
-    await ensureConfiguredAdminAccess({ id: userId, email });
-    const refreshed = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userId);
-    return (refreshed.data ?? []).map((row) => row.role as string);
-  }
-
-  return roles;
+  return (data ?? []).map((row) => row.role as string);
 }
 
 export function useSession() {
@@ -83,10 +33,7 @@ export function useMyRoles() {
     queryFn: async () => {
       const { data: userData } = await supabase.auth.getUser();
       const uid = userData.user?.id;
-      const email = userData.user?.email ?? null;
-      if (!uid) return [] as string[];
-
-      return getUserRolesForUser(uid, email);
+      return getUserRolesForUser(uid);
     },
   });
 }

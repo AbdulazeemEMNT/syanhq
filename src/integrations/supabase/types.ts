@@ -743,6 +743,48 @@ export type Database = {
           },
         ]
       }
+      staff_invitations: {
+        Row: {
+          accepted_at: string | null
+          created_at: string
+          email: string
+          expires_at: string
+          full_name: string | null
+          id: string
+          invited_by: string | null
+          permissions: string[]
+          role_preset: string
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string
+          email: string
+          expires_at?: string
+          full_name?: string | null
+          id?: string
+          invited_by?: string | null
+          permissions?: string[]
+          role_preset?: string
+          status?: string
+          user_id?: string | null
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string
+          email?: string
+          expires_at?: string
+          full_name?: string | null
+          id?: string
+          invited_by?: string | null
+          permissions?: string[]
+          role_preset?: string
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       staff_members: {
         Row: {
           created_at: string
@@ -831,6 +873,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      accept_staff_invitation: { Args: never; Returns: boolean }
       claim_first_admin: { Args: never; Returns: boolean }
       has_permission: {
         Args: { _permission: string; _user_id: string }
