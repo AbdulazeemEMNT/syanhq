@@ -4,9 +4,27 @@ import { supabase } from "@/integrations/supabase/client";
 import { useMyRoles, useSession } from "@/lib/admin-data";
 import { usePermissions, type Permission } from "@/lib/permissions";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 
+// Central gate for every /admin/* page: the parent layout has already verified the
+// session; here we resolve permissions before anything renders.
 export const Route = createFileRoute("/_authenticated/admin")({
+  beforeLoad: async ({ context }) => {
+    const permissions = await context.queryClient.fetchQuery({
+      queryKey: ["my-permissions"],
+      queryFn: async () => {
+        const { data, error } = await supabase.rpc("my_permissions");
+        if (error) throw error;
+        return (data ?? []) as Permission[];
+      },
+      staleTime: 0,
+    });
+    return { permissions };
+  },
+  pendingComponent: () => (
+    <div className="flex min-h-screen items-center justify-center text-sm text-muted-foreground">
+      Checking access…
+    </div>
+  ),
   component: AdminLayout,
 });
 
@@ -24,7 +42,8 @@ function AdminLayout() {
   const queryClient = useQueryClient();
   const { data: user } = useSession();
   const { data: roles = [] } = useMyRoles();
-  const { data: perms = [], isLoading: permsLoading } = usePermissions();
+  const { permissions: initialPerms } = Route.useRouteContext();
+  const { data: perms = initialPerms } = usePermissions();
   const isOwner = roles.includes("admin");
 
   async function signOut() {
@@ -34,18 +53,24 @@ function AdminLayout() {
     navigate({ to: "/auth", replace: true });
   }
 
-  async function claimAdmin() {
-    const { data, error } = await supabase.rpc("claim_first_admin");
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
-    if (data) {
-      toast.success("You are now the workspace admin.");
-      queryClient.invalidateQueries();
-    } else {
-      toast.error("An admin already exists. Ask them to grant you access.");
-    }
+  if (perms.length === 0) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-secondary/50 px-5 py-16">
+        <div className="w-full max-w-md rounded-[2rem] border border-hairline bg-card p-10 text-center">
+          <h1 className="display-lg text-2xl">No access</h1>
+          <p className="mt-3 text-sm text-muted-foreground">
+            {user?.email ?? "This account"} isn't authorised to use the SYAN Media CMS, or its
+            access has been disabled. Ask a Super Admin to invite you.
+          </p>
+          <div className="mt-6 flex justify-center gap-3">
+            <Button asChild variant="outline" className="rounded-full">
+              <Link to="/">Back to website</Link>
+            </Button>
+            <Button className="rounded-full" onClick={signOut}>Sign out</Button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -85,23 +110,6 @@ function AdminLayout() {
           ))}
         </div>
       </header>
-
-      {!permsLoading && perms.length === 0 && (
-        <div className="mx-auto max-w-7xl px-5 pt-6 lg:px-8">
-          <div className="soft-card flex flex-wrap items-center justify-between gap-4 p-6">
-            <div>
-              <p className="font-serif text-base font-bold">No access yet</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Your account has no permissions, or your access has been disabled. Ask a Super
-                Admin to invite you. If this is a brand-new workspace, claim the owner seat.
-              </p>
-            </div>
-            <Button className="rounded-full" onClick={claimAdmin}>
-              Claim owner access
-            </Button>
-          </div>
-        </div>
-      )}
 
       <main className="mx-auto max-w-7xl px-5 py-8 lg:px-8">
         <Outlet />

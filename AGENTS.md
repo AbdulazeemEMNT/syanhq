@@ -19,3 +19,4 @@
 
 - Website CMS access is permission-based: `staff_members` + `staff_permissions` with `has_permission()` (owners in `user_roles` admin hold all) enforced in RLS on every `cms_*` table, `contact_messages` and the cover bucket; the admin nav and `RequirePermission` only mirror it. Staff are invited/managed via settings.manage-checked server functions using the service client; no public staff sign-up.
 - Articles (public "Insights") live only in `cms_articles`; public pages read through publishable-key server functions showing `published AND NOT archived` with a publish date not in the future. Covers reuse the private `work-covers` bucket under `articles/`.
+- `/admin/*` access is resolved once in the admin layout's `beforeLoad` (via `my_permissions()`) after the `_authenticated` session gate; users with no permissions get a no-access screen with no CMS chrome. There is no self-service sign-up in the UI.

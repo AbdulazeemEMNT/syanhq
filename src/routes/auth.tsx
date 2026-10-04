@@ -11,16 +11,16 @@ export const Route = createFileRoute("/auth")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Staff Sign In — SYAN Intelligence" },
+      { title: "Staff Sign In — SYAN Media" },
       {
         name: "description",
         content:
-          "Secure sign-in for SYAN Media staff to access the SYAN Intelligence admin platform.",
+          "Secure sign-in for SYAN Media staff to access the SYAN Media CMS.",
       },
-      { property: "og:title", content: "Staff Sign In — SYAN Intelligence" },
+      { property: "og:title", content: "Staff Sign In — SYAN Media" },
       {
         property: "og:description",
-        content: "Secure sign-in for the SYAN Intelligence admin platform.",
+        content: "Secure sign-in for the SYAN Media CMS.",
       },
       { name: "robots", content: "noindex" },
     ],
@@ -30,12 +30,9 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
   const [busy, setBusy] = useState(false);
-  const [pendingEmail, setPendingEmail] = useState<string | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -48,26 +45,8 @@ function AuthPage() {
     if (busy) return;
     setBusy(true);
     try {
-      const authReturnPath = `${window.location.origin}/auth`;
-
-      if (mode === "signup") {
-        const { data: signUpData, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: authReturnPath,
-            data: { full_name: fullName },
-          },
-        });
-        if (error) throw error;
-        if (!signUpData.session) {
-          setPendingEmail(email);
-          return;
-        }
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-      }
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
       const { data } = await supabase.auth.getSession();
       if (data.session) navigate({ to: "/admin", replace: true });
     } catch (err) {
@@ -103,29 +82,6 @@ function AuthPage() {
     }
   }
 
-  if (pendingEmail) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-secondary/50 px-5 py-16">
-        <div className="w-full max-w-md rounded-[2rem] border border-hairline bg-card p-10 text-center">
-          <h1 className="display-lg text-2xl">Confirm your email</h1>
-          <p className="mt-3 text-sm text-muted-foreground">
-            We sent a confirmation link to <strong>{pendingEmail}</strong>. Open it to activate your
-            account, then come back and sign in.
-          </p>
-          <Button
-            className="mt-6 w-full rounded-full"
-            onClick={() => {
-              setPendingEmail(null);
-              setMode("signin");
-            }}
-          >
-            Back to sign in
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary/50 px-5 py-16">
       <div className="w-full max-w-md rounded-[2rem] border border-hairline bg-card p-10">
@@ -133,25 +89,13 @@ function AuthPage() {
           SYAN Media
         </Link>
         <h1 className="display-lg mt-4 text-3xl">
-          {mode === "signin" ? "Staff sign in" : "Create staff account"}
+"Staff sign in"
         </h1>
         <p className="mt-3 text-sm text-muted-foreground">
-          Access to SYAN Intelligence project administration.
+          For invited SYAN Media staff only.
         </p>
 
         <form onSubmit={onSubmit} className="mt-8 space-y-4">
-          {mode === "signup" && (
-            <div>
-              <Label htmlFor="full-name">Full name</Label>
-              <Input
-                id="full-name"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                className="mt-2 rounded-full"
-                required
-              />
-            </div>
-          )}
           <div>
             <Label htmlFor="email">Work email</Label>
             <Input
@@ -176,7 +120,7 @@ function AuthPage() {
             />
           </div>
           <Button type="submit" disabled={busy} className="w-full rounded-full">
-            {busy ? "Please wait…" : mode === "signin" ? "Sign in" : "Create account"}
+            {busy ? "Please wait…" : "Sign in"}
           </Button>
         </form>
 
@@ -184,15 +128,6 @@ function AuthPage() {
           Continue with Google
         </Button>
 
-        <button
-          type="button"
-          onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-          className="mt-6 w-full text-center text-sm text-muted-foreground underline underline-offset-4"
-        >
-          {mode === "signin"
-            ? "Need a staff account? Create one"
-            : "Already have an account? Sign in"}
-        </button>
       </div>
     </div>
   );
