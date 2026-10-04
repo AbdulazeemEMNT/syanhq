@@ -18,6 +18,7 @@ export function useMyWorkspace() {
       const { data, error } = await supabase
         .from("intelligence_workspaces")
         .select("*")
+        .order("created_at").limit(1)
         .maybeSingle();
       if (error) throw error;
       return data;

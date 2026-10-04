@@ -70,7 +70,7 @@ export const refreshMentions = createServerFn({ method: "POST" })
     const { data: ws } = await context.supabase
       .from("intelligence_workspaces")
       .select("id, organisation_name, keywords, competitors")
-      .eq("owner_id", context.userId)
+      .order("created_at").limit(1)
       .maybeSingle();
     if (!ws) throw new Error("Finish setting up your workspace first.");
 

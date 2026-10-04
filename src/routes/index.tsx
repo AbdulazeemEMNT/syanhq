@@ -341,7 +341,7 @@ function Index() {
               Explore SYAN Intelligence <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
-              to="/intelligence/dashboard"
+              to="/intelligence"
               className="inline-flex items-center gap-3 rounded-full border border-white/25 px-7 py-4 text-sm font-semibold text-white/80 hover:border-white/60"
             >
               View the dashboard

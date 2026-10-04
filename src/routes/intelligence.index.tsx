@@ -79,7 +79,7 @@ function IntelligenceLanding() {
           </div>
           <p className="mt-6 text-sm text-white/50">
             Already have access?{" "}
-            <Link to="/auth" className="underline underline-offset-4 hover:text-[color:var(--gold)]">
+            <Link to="/intelligence/sign-in" className="underline underline-offset-4 hover:text-[color:var(--gold)]">
               Sign in
             </Link>
           </p>
