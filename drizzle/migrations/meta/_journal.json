@@ -92,6 +92,13 @@
       "when": 1791104743394,
       "tag": "0012_staff_invitations",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1791151930160,
+      "tag": "0013_intelligence_workspaces",
+      "breakpoints": true
     }
   ]
 }

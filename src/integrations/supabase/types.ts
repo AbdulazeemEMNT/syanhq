@@ -526,6 +526,42 @@ export type Database = {
           },
         ]
       }
+      intelligence_workspaces: {
+        Row: {
+          competitors: string[]
+          created_at: string
+          id: string
+          keywords: string[]
+          organisation_name: string
+          owner_id: string
+          priorities: string[]
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          competitors?: string[]
+          created_at?: string
+          id?: string
+          keywords?: string[]
+          organisation_name: string
+          owner_id: string
+          priorities?: string[]
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          competitors?: string[]
+          created_at?: string
+          id?: string
+          keywords?: string[]
+          organisation_name?: string
+          owner_id?: string
+          priorities?: string[]
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
