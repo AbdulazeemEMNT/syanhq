@@ -16,38 +16,62 @@ export type Database = {
     Tables: {
       cms_articles: {
         Row: {
+          archived: boolean
+          author: string | null
           body: string | null
           category: string
+          cover_image_path: string | null
           created_at: string
           excerpt: string | null
+          featured: boolean
           id: string
           published: boolean
+          published_at: string | null
           reading_time: string | null
+          seo_description: string | null
+          seo_title: string | null
           slug: string
+          tags: string[]
           title: string
           updated_at: string
         }
         Insert: {
+          archived?: boolean
+          author?: string | null
           body?: string | null
           category?: string
+          cover_image_path?: string | null
           created_at?: string
           excerpt?: string | null
+          featured?: boolean
           id?: string
           published?: boolean
+          published_at?: string | null
           reading_time?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
           slug: string
+          tags?: string[]
           title: string
           updated_at?: string
         }
         Update: {
+          archived?: boolean
+          author?: string | null
           body?: string | null
           category?: string
+          cover_image_path?: string | null
           created_at?: string
           excerpt?: string | null
+          featured?: boolean
           id?: string
           published?: boolean
+          published_at?: string | null
           reading_time?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
           slug?: string
+          tags?: string[]
           title?: string
           updated_at?: string
         }
@@ -719,6 +743,68 @@ export type Database = {
           },
         ]
       }
+      staff_members: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string | null
+          invited_by: string | null
+          role_preset: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name?: string | null
+          invited_by?: string | null
+          role_preset?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          invited_by?: string | null
+          role_preset?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      staff_permissions: {
+        Row: {
+          created_at: string
+          id: string
+          permission: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          permission: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          permission?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "staff_permissions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "staff_members"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -746,6 +832,10 @@ export type Database = {
     }
     Functions: {
       claim_first_admin: { Args: never; Returns: boolean }
+      has_permission: {
+        Args: { _permission: string; _user_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -754,6 +844,8 @@ export type Database = {
         Returns: boolean
       }
       is_staff: { Args: { _user_id: string }; Returns: boolean }
+      my_permissions: { Args: never; Returns: string[] }
+      unread_message_count: { Args: never; Returns: number }
       user_roles_write_admin: {
         Args: { _email: string; _role: Database["public"]["Enums"]["app_role"] }
         Returns: boolean
