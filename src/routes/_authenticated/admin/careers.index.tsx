@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
-import { draftJobDescription } from "@/lib/job-draft.functions";
+import { draftJobDescription, type JobDraft } from "@/lib/job-draft.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/careers/")({
   component: CareersAdmin,
