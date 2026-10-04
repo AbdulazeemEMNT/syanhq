@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 // session; here we resolve permissions before anything renders.
 export const Route = createFileRoute("/_authenticated/admin")({
   beforeLoad: async ({ context }) => {
+    // Turn a pending invitation for this verified email into staff access (no-op otherwise).
+    await supabase.rpc("accept_staff_invitation");
     const permissions = await context.queryClient.fetchQuery({
       queryKey: ["my-permissions"],
       queryFn: async () => {

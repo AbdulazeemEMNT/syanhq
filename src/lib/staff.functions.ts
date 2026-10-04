@@ -27,6 +27,45 @@ async function assertEditable(sb: any, actorId: string, targetId: string) {
   if (data) throw new Error("Workspace owners can't be changed here.");
 }
 
+export type InvitationRow = {
+  id: string;
+  email: string;
+  full_name: string | null;
+  role_preset: string;
+  permissions: string[];
+  status: string;
+  created_at: string;
+  expires_at: string;
+};
+
+export const listInvitations = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<InvitationRow[]> => {
+    await assertManager(context);
+    const { data, error } = await context.supabase
+      .from("staff_invitations")
+      .select("id,email,full_name,role_preset,permissions,status,created_at,expires_at")
+      .eq("status", "pending")
+      .order("created_at", { ascending: false });
+    if (error) throw new Error(error.message);
+    const now = Date.now();
+    return (data ?? []).map((r: InvitationRow) => ({
+      ...r,
+      status: new Date(r.expires_at).getTime() < now ? "expired" : r.status,
+    }));
+  });
+
+export const revokeInvitation = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ id: z.string().uuid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    await assertManager(context);
+    const sb = await admin();
+    const { error } = await sb.from("staff_invitations").update({ status: "revoked" }).eq("id", data.id).eq("status", "pending");
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
 export type StaffRow = {
   user_id: string;
   email: string;
@@ -96,35 +135,29 @@ export const inviteStaff = createServerFn({ method: "POST" })
     const sb = await admin();
 
     const { data: list } = await sb.auth.admin.listUsers({ perPage: 1000 });
-    let user = list?.users.find((u) => u.email?.toLowerCase() === data.email);
-    let invited = false;
-    if (!user) {
-      const { data: inv, error } = await sb.auth.admin.inviteUserByEmail(data.email, {
-        redirectTo: data.redirectTo,
-        data: data.full_name ? { full_name: data.full_name } : {},
-      });
-      if (error) throw new Error(error.message);
-      user = inv.user;
-      invited = true;
-    } else {
-      await assertEditable(sb, context.userId, user.id);
-    }
+    const existing = list?.users.find((u) => u.email?.toLowerCase() === data.email);
+    if (existing) await assertEditable(sb, context.userId, existing.id);
 
-    const { error: mErr } = await sb.from("staff_members").upsert({
-      user_id: user.id,
+    // The invitation is the allowlist: access is granted only when this email signs in.
+    await sb.from("staff_invitations").update({ status: "revoked" }).eq("status", "pending").ilike("email", data.email);
+    const { error: iErr } = await sb.from("staff_invitations").insert({
       email: data.email,
       full_name: data.full_name || null,
       role_preset: data.role_preset,
-      status: "active",
+      permissions: data.permissions,
       invited_by: context.userId,
     });
-    if (mErr) throw new Error(mErr.message);
-    await sb.from("staff_permissions").delete().eq("user_id", user.id);
-    const { error: pErr } = await sb
-      .from("staff_permissions")
-      .insert(data.permissions.map((permission) => ({ user_id: user!.id, permission })));
-    if (pErr) throw new Error(pErr.message);
-    return { invited };
+    if (iErr) throw new Error(iErr.message);
+
+    let invited = false;
+    if (!existing) {
+      const { error } = await sb.auth.admin.inviteUserByEmail(data.email, {
+        redirectTo: data.redirectTo,
+        data: data.full_name ? { full_name: data.full_name } : {},
+      });
+      invited = !error;
+    }
+    return { invited, existing: !!existing };
   });
 
 export const updateStaff = createServerFn({ method: "POST" })
@@ -167,6 +200,10 @@ export const removeStaff = createServerFn({ method: "POST" })
     await assertManager(context);
     const sb = await admin();
     await assertEditable(sb, context.userId, data.user_id);
+    const { data: member } = await sb.from("staff_members").select("email").eq("user_id", data.user_id).maybeSingle();
+    if (member?.email) {
+      await sb.from("staff_invitations").update({ status: "revoked" }).eq("status", "pending").ilike("email", member.email);
+    }
     const { error } = await sb.from("staff_members").delete().eq("user_id", data.user_id);
     if (error) throw new Error(error.message);
     return { ok: true };
