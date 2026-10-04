@@ -8,8 +8,8 @@ function parseDate(raw: string | undefined, now: number): string | null {
   if (!raw) return null;
   const m = raw.match(/(\d+)\s*(minute|min|hour|day|week|month)s?\s+ago/i);
   if (m) {
-    const n = Number(m[1]);
-    const unit = m[2].toLowerCase();
+    const n = Number(m[1] ?? 0);
+    const unit = (m[2] ?? "day").toLowerCase();
     const ms = unit.startsWith("min") ? 6e4 : unit === "hour" ? 36e5 : unit === "day" ? 864e5 : unit === "week" ? 6048e5 : 2592e6;
     return new Date(now - n * ms).toISOString();
   }
