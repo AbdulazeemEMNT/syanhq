@@ -108,7 +108,7 @@ export function Footer() {
               )}
               <li>
                 <Link
-                  to="/intelligence/dashboard"
+                  to="/intelligence"
                   className="text-sm text-white/60 hover:text-[color:var(--gold)]"
                 >
                   Intelligence Dashboard

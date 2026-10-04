@@ -64,7 +64,8 @@ function IntelligenceLanding() {
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
             <Link
-              to="/contact"
+              to="/intelligence/sign-in"
+              search={{ mode: "signup" }}
               className="inline-flex items-center gap-3 bg-[color:var(--gold)] px-7 py-4 rounded-full text-sm font-semibold text-navy hover:opacity-90"
             >
               Get Started <ArrowRight className="h-4 w-4" />
@@ -79,7 +80,7 @@ function IntelligenceLanding() {
           </div>
           <p className="mt-6 text-sm text-white/50">
             Already have access?{" "}
-            <Link to="/auth" className="underline underline-offset-4 hover:text-[color:var(--gold)]">
+            <Link to="/intelligence/sign-in" className="underline underline-offset-4 hover:text-[color:var(--gold)]">
               Sign in
             </Link>
           </p>
@@ -305,7 +306,8 @@ function IntelligenceLanding() {
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link
-              to="/contact"
+              to="/intelligence/sign-in"
+              search={{ mode: "signup" }}
               className="inline-flex items-center gap-3 bg-[color:var(--gold)] px-7 py-4 rounded-full text-sm font-semibold text-navy hover:opacity-90"
             >
               Get Started <ArrowRight className="h-4 w-4" />

@@ -588,6 +588,35 @@ export type Database = {
           },
         ]
       }
+      intelligence_workspace_members: {
+        Row: {
+          created_at: string
+          role: string
+          user_id: string
+          workspace_id: string
+        }
+        Insert: {
+          created_at?: string
+          role?: string
+          user_id: string
+          workspace_id: string
+        }
+        Update: {
+          created_at?: string
+          role?: string
+          user_id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "intelligence_workspace_members_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "intelligence_workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       intelligence_workspaces: {
         Row: {
           competitors: string[]
@@ -985,6 +1014,10 @@ export type Database = {
         Returns: boolean
       }
       is_staff: { Args: { _user_id: string }; Returns: boolean }
+      is_workspace_member: {
+        Args: { _user_id: string; _workspace_id: string }
+        Returns: boolean
+      }
       my_permissions: { Args: never; Returns: string[] }
       unread_message_count: { Args: never; Returns: number }
       user_roles_write_admin: {

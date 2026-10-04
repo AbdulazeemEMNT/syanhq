@@ -47,6 +47,7 @@ export async function buildAskTools(db: Db) {
   const { data: ws } = await db
     .from("intelligence_workspaces")
     .select("id, organisation_name, website, keywords, competitors, priorities")
+    .order("created_at").limit(1)
     .maybeSingle();
 
   let cache: Row[] | null = null;

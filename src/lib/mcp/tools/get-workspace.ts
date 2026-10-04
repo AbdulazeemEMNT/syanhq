@@ -12,7 +12,7 @@ export default defineTool({
     const { data, error } = await supabaseForUser(ctx)
       .from("intelligence_workspaces")
       .select("id, organisation_name, website, keywords, competitors, priorities")
-      .eq("owner_id", ctx.getUserId()!)
+      .order("created_at").limit(1)
       .maybeSingle();
     if (error) return { content: [{ type: "text", text: error.message }], isError: true };
     if (!data) return { content: [{ type: "text", text: "No Intelligence workspace set up for this account yet." }] };

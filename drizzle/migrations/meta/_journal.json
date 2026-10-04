@@ -113,6 +113,13 @@
       "when": 1791153245929,
       "tag": "0015_mentions_subject",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1791154353343,
+      "tag": "0016_intelligence_org_isolation",
+      "breakpoints": true
     }
   ]
 }

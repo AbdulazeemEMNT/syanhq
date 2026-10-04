@@ -36,7 +36,10 @@ function AuthPage() {
   const { next } = Route.useSearch();
   const go = () => {
     if (next) window.location.assign(next);
-    else navigate({ to: "/admin", replace: true });
+    else
+      void supabase.rpc("my_permissions").then(({ data }) =>
+        navigate({ to: (data ?? []).length ? "/admin" : "/intelligence/overview", replace: true }),
+      );
   };
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
