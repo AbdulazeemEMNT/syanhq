@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
+import { RefreshCoverage } from "@/components/intelligence/RefreshCoverage";
 
 export const Route = createFileRoute("/_authenticated/intelligence/mentions")({
   head: () => ({ meta: [{ title: "Mentions — SYAN Intelligence" }, { name: "robots", content: "noindex" }] }),
@@ -92,24 +93,24 @@ function Mentions() {
 
   return (
     <div className="space-y-8">
+      <div className="flex flex-wrap items-end justify-between gap-4">
       <div>
         <p className="eyebrow">Mentions</p>
         <h1 className="display-lg mt-2 text-3xl">What's being said about you</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Every article, post and broadcast mention collected from your connected sources.
+          News coverage of your names and keywords. Social media and broadcast are not connected yet.
         </p>
+      </div>
+      {!noData && <RefreshCoverage />}
       </div>
 
       {noData ? (
         <div className="soft-card p-10 text-center">
-          <h2 className="font-serif text-xl font-bold">No monitoring data yet.</h2>
+          <h2 className="font-serif text-xl font-bold">No mentions yet.</h2>
           <p className="mx-auto mt-2 max-w-lg text-sm text-muted-foreground">
-            Connect a supported source to begin tracking conversations about your organisation. Once a
-            source is connected, mentions of your names and keywords will appear here automatically.
+            News monitoring is connected. Check the news now to collect real coverage of your names and keywords from the last 7 days.
           </p>
-          <Link to="/intelligence/settings" className="mt-6 inline-block rounded-full bg-navy px-5 py-2.5 text-sm font-semibold text-navy-foreground">
-            See how to connect a source
-          </Link>
+          <div className="mt-6 flex justify-center"><RefreshCoverage label="Check the news now" /></div>
         </div>
       ) : (
         <>
