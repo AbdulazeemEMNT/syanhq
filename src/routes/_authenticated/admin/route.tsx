@@ -10,7 +10,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminLayout,
 });
 
-const nav: { to: string; label: string; perm: Permission; exact?: boolean }[] = [
+const nav: { to: "/admin" | "/admin/works" | "/admin/articles" | "/admin/careers" | "/admin/messages" | "/admin/settings"; label: string; perm: Permission; exact?: boolean }[] = [
   { to: "/admin", label: "Dashboard", perm: "dashboard.view", exact: true },
   { to: "/admin/works", label: "Works", perm: "works.manage" },
   { to: "/admin/articles", label: "Articles", perm: "articles.manage" },
