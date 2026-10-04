@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
+import { submitContactMessage } from "@/lib/contact.functions";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero, Section } from "@/components/site/Primitives";
 import { contact, services } from "@/content/site";
@@ -24,21 +25,37 @@ export const Route = createFileRoute("/contact")({
   component: Contact,
 });
 
-function Contact() {
-  const [sent, setSent] = useState(false);
-  const [form, setForm] = useState({
-    name: "",
-    organisation: "",
-    email: "",
-    interest: services[0]?.name ?? "",
-    message: "",
-  });
+const emptyForm = {
+  name: "",
+  organisation: "",
+  email: "",
+  phone: "",
+  enquiry_type: services[0]?.name ?? "",
+  message: "",
+  website: "",
+};
+type FormKey = keyof typeof emptyForm;
 
-  const mailto = `mailto:${contact.email}?subject=${encodeURIComponent(
-    `New enquiry — ${form.organisation || form.name || "SYAN website"}`,
-  )}&body=${encodeURIComponent(
-    `Name: ${form.name}\nOrganisation: ${form.organisation}\nEmail: ${form.email}\nInterest: ${form.interest}\n\n${form.message}`,
-  )}`;
+function validate(f: typeof emptyForm) {
+  const e: Partial<Record<FormKey, string>> = {};
+  if (f.name.trim().length < 2) e.name = "Please enter your name";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.trim())) e.email = "Enter a valid email";
+  if (f.phone && !/^[+\d\s()-]{6,40}$/.test(f.phone.trim())) e.phone = "Enter a valid phone number";
+  if (f.message.trim().length < 10) e.message = "Tell us a little more (10+ characters)";
+  return e;
+}
+
+function Contact() {
+  const submit = useServerFn(submitContactMessage);
+  const [startedAt] = useState(() => Date.now());
+  const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<Partial<Record<FormKey, string>>>({});
+  const [form, setForm] = useState(emptyForm);
+  const inputCls =
+    "w-full rounded-xl border border-hairline bg-card px-4 py-3 text-sm outline-none focus:border-accent";
+  const err = (k: FormKey) =>
+    errors[k] ? <p className="mt-1 text-xs text-destructive">{errors[k]}</p> : null;
 
   return (
     <SiteLayout>
@@ -51,54 +68,77 @@ function Contact() {
       <Section className="grid gap-14 lg:grid-cols-[1.2fr_1fr]">
         <div>
           <p className="eyebrow">Enquiry</p>
+          {status === "sent" ? (
+            <div className="mt-8 soft-card p-10">
+              <p className="font-serif text-2xl font-bold">Thank you — your message is with us.</p>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                A member of the SYAN team will reply to {form.email} shortly, usually within one
+                working day.
+              </p>
+              <button
+                onClick={() => {
+                  setForm(emptyForm);
+                  setStatus("idle");
+                }}
+                className="mt-6 text-sm text-accent underline"
+              >
+                Send another message
+              </button>
+            </div>
+          ) : (
           <form
+            noValidate
             className="mt-8 space-y-6"
             onSubmit={async (e) => {
               e.preventDefault();
-              setSent(true);
+              const v = validate(form);
+              setErrors(v);
+              setServerError(null);
+              if (Object.keys(v).length) return;
+              setStatus("sending");
               try {
-                await supabase.from("contact_messages").insert({
-                  name: form.name,
-                  organisation: form.organisation || null,
-                  email: form.email,
-                  interest: form.interest || null,
-                  message: form.message,
-                });
-              } catch {
-                // the mailto handoff below still fires even if saving fails
+                await submit({ data: { ...form, elapsedMs: Date.now() - startedAt } });
+                setStatus("sent");
+              } catch (ex) {
+                setServerError(
+                  ex instanceof Error && ex.message.length < 200
+                    ? ex.message
+                    : "We couldn't send your message. Please try again.",
+                );
+                setStatus("idle");
               }
-              window.location.href = mailto;
             }}
           >
+            <input
+              type="text"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              value={form.website}
+              onChange={(e) => setForm({ ...form, website: e.target.value })}
+              className="hidden"
+            />
             <Field label="Full name">
-              <input
-                required
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full rounded-xl border border-hairline bg-card px-4 py-3 text-sm outline-none focus:border-accent"
-              />
+              <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputCls} />
+              {err("name")}
             </Field>
             <Field label="Organisation">
-              <input
-                value={form.organisation}
-                onChange={(e) => setForm({ ...form, organisation: e.target.value })}
-                className="w-full rounded-xl border border-hairline bg-card px-4 py-3 text-sm outline-none focus:border-accent"
-              />
+              <input value={form.organisation} onChange={(e) => setForm({ ...form, organisation: e.target.value })} className={inputCls} />
             </Field>
             <Field label="Email">
-              <input
-                required
-                type="email"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="w-full rounded-xl border border-hairline bg-card px-4 py-3 text-sm outline-none focus:border-accent"
-              />
+              <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={inputCls} />
+              {err("email")}
+            </Field>
+            <Field label="Phone (optional)">
+              <input type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className={inputCls} />
+              {err("phone")}
             </Field>
             <Field label="What do you need?">
               <select
-                value={form.interest}
-                onChange={(e) => setForm({ ...form, interest: e.target.value })}
-                className="w-full rounded-xl border border-hairline bg-card px-4 py-3 text-sm outline-none focus:border-accent"
+                value={form.enquiry_type}
+                onChange={(e) => setForm({ ...form, enquiry_type: e.target.value })}
+                className={inputCls}
               >
                 {services.map((s) => (
                   <option key={s.slug} value={s.name}>
@@ -106,35 +146,24 @@ function Contact() {
                   </option>
                 ))}
                 <option value="SYAN Intelligence">SYAN Intelligence</option>
+                <option value="Careers">Careers</option>
                 <option value="Something else">Something else</option>
               </select>
             </Field>
             <Field label="Brief">
-              <textarea
-                required
-                rows={6}
-                value={form.message}
-                onChange={(e) => setForm({ ...form, message: e.target.value })}
-                className="w-full rounded-xl border border-hairline bg-card px-4 py-3 text-sm outline-none focus:border-accent"
-              />
+              <textarea rows={6} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className={inputCls} />
+              {err("message")}
             </Field>
             <button
               type="submit"
-              className="bg-navy px-7 py-4 rounded-full text-sm font-semibold text-navy-foreground transition-colors hover:bg-windsor"
+              disabled={status === "sending"}
+              className="bg-navy px-7 py-4 rounded-full text-sm font-semibold text-navy-foreground transition-colors hover:bg-windsor disabled:opacity-60"
             >
-              Start a Conversation
+              {status === "sending" ? "Sending…" : "Start a Conversation"}
             </button>
-            {sent && (
-              <p className="text-sm text-muted-foreground">
-                Your email client should now open with the enquiry ready to send. If it doesn&apos;t,
-                write to{" "}
-                <a className="text-accent hover:underline" href={`mailto:${contact.email}`}>
-                  {contact.email}
-                </a>
-                .
-              </p>
-            )}
+            {serverError && <p className="text-sm text-destructive">{serverError}</p>}
           </form>
+          )}
         </div>
 
         <aside className="space-y-8">
