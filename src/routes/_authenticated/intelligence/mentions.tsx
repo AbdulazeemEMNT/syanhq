@@ -51,7 +51,8 @@ function Mentions() {
     queryFn: async () => {
       let q = supabase
         .from("intelligence_mentions")
-        .select("id, source_name, published_at, title, excerpt, author, sentiment, topic, reach, url, relevance");
+        .select("id, source_name, published_at, title, excerpt, author, sentiment, topic, reach, url, relevance")
+        .is("subject", null);
       if (period !== "all") q = q.gte("published_at", new Date(Date.now() - Number(period) * 864e5).toISOString());
       if (sentiment !== "all") q = q.eq("sentiment", sentiment);
       if (topic !== "all") q = q.eq("topic", topic);
@@ -69,7 +70,7 @@ function Mentions() {
   const { data: options } = useQuery({
     queryKey: ["intelligence", "mention-options"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("intelligence_mentions").select("topic, source_name").limit(1000);
+      const { data, error } = await supabase.from("intelligence_mentions").select("topic, source_name").is("subject", null).limit(1000);
       if (error) throw error;
       const rows = data ?? [];
       return {

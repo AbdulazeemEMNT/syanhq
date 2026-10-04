@@ -13,7 +13,7 @@ export function RefreshCoverage({ label = "Check for new coverage" }: { label?: 
     try {
       const r = await run();
       await qc.invalidateQueries({ queryKey: ["intelligence"] });
-      setState({ busy: false, msg: r.found ? `Checked the news — ${r.found} article${r.found === 1 ? "" : "s"} from the last 7 days.` : "No news coverage found in the last 7 days." });
+      setState({ busy: false, msg: (r.found ? `Checked the news — ${r.found} article${r.found === 1 ? "" : "s"} about you from the last 7 days` : "No news coverage about you in the last 7 days") + (r.competitors ? `, plus ${r.competitors} about competitors.` : ".") });
     } catch (e) {
       setState({ busy: false, err: true, msg: e instanceof Error ? e.message : "Something went wrong. Please try again." });
     }

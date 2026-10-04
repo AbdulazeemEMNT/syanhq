@@ -18,7 +18,8 @@ export default defineTool({
     if (!ctx.isAuthenticated()) return { content: [{ type: "text", text: "Not authenticated" }], isError: true };
     let q = supabaseForUser(ctx)
       .from("intelligence_mentions")
-      .select("id, source_name, published_at, title, author, sentiment, topic, reach, relevance, url, excerpt");
+      .select("id, source_name, published_at, title, author, sentiment, topic, reach, relevance, url, excerpt")
+      .is("subject", null);
     if (sentiment) q = q.eq("sentiment", sentiment);
     if (topic) q = q.ilike("topic", topic);
     if (days) q = q.gte("published_at", new Date(Date.now() - days * 86400000).toISOString());
