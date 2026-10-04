@@ -34,7 +34,7 @@ export const Route = createFileRoute("/api/ask")({
         const { createOpenAI } = await import("@ai-sdk/openai");
         const { buildAskTools, ASK_SYSTEM } = await import("@/lib/ask-syan.server");
 
-        const messages = body.messages as Parameters<typeof convertToModelMessages>[0];
+        const messages = body.messages as import("ai").UIMessage[];
         const { tools, organisation } = await buildAskTools(db);
 
         let runId: string | undefined;
