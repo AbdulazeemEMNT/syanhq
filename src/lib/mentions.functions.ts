@@ -69,7 +69,7 @@ export const refreshMentions = createServerFn({ method: "POST" })
   .handler(async ({ context }) => {
     const { data: ws } = await context.supabase
       .from("intelligence_workspaces")
-      .select("id, organisation_name, keywords")
+      .select("id, organisation_name, keywords, competitors")
       .eq("owner_id", context.userId)
       .maybeSingle();
     if (!ws) throw new Error("Finish setting up your workspace first.");
@@ -78,49 +78,60 @@ export const refreshMentions = createServerFn({ method: "POST" })
     const fcKey = process.env["FIRECRAWL_API_KEY"];
     if (!lovableKey || !fcKey) throw new Error("News monitoring isn't connected yet.");
 
-    const terms = (ws.keywords.length ? ws.keywords : [ws.organisation_name]).slice(0, 4);
-    const hits = new Map<string, NewsHit>();
-    for (const term of terms) {
-      const res = await fetch("https://connector-gateway.lovable.dev/firecrawl/v2/search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${lovableKey}`, "X-Connection-Api-Key": fcKey },
-        body: JSON.stringify({ query: `"${term.replace(/"/g, "")}"`, sources: [{ type: "news" }], tbs: "qdr:w", limit: 10 }),
-      });
-      if (!res.ok) {
-        const body = await res.text();
-        console.error(`News search failed [${res.status}]: ${body}`);
-        if (res.status === 402 || res.status === 403) throw new Error("News monitoring is paused: the workspace has run out of credits or reached its limit.");
-        continue;
+    async function search(terms: string[], limit: number) {
+      const hits = new Map<string, NewsHit>();
+      for (const term of terms) {
+        const res = await fetch("https://connector-gateway.lovable.dev/firecrawl/v2/search", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${lovableKey}`, "X-Connection-Api-Key": fcKey! },
+          body: JSON.stringify({ query: `"${term.replace(/"/g, "")}"`, sources: [{ type: "news" }], tbs: "qdr:w", limit }),
+        });
+        if (!res.ok) {
+          const body = await res.text();
+          console.error(`News search failed [${res.status}]: ${body}`);
+          if (res.status === 402 || res.status === 403) throw new Error("News monitoring is paused: the workspace has run out of credits or reached its limit.");
+          continue;
+        }
+        const json = (await res.json()) as { data?: { news?: NewsHit[] } };
+        for (const h of json.data?.news ?? []) if (h.url && !hits.has(h.url)) hits.set(h.url, h);
       }
-      const json = (await res.json()) as { data?: { news?: NewsHit[] } };
-      for (const h of json.data?.news ?? []) if (h.url && !hits.has(h.url)) hits.set(h.url, h);
+      return [...hits.values()];
     }
 
-    const list = [...hits.values()].slice(0, 40);
     const now = Date.now();
-    const labels = await classify(
-      list.map((h, i) => ({ i, title: h.title ?? "", snippet: (h.snippet ?? "").slice(0, 400) })),
-      ws.organisation_name,
-    ).catch(() => new Map());
+    async function toRows(list: NewsHit[], about: string, subject: string | null) {
+      const labels = await classify(
+        list.map((h, i) => ({ i, title: h.title ?? "", snippet: (h.snippet ?? "").slice(0, 400) })),
+        about,
+      ).catch(() => new Map());
+      return list.map((h, i) => {
+        const l = labels.get(i) ?? {};
+        const sentiment = ["positive", "neutral", "negative"].includes(String(l.sentiment)) ? String(l.sentiment) : null;
+        const relevance = typeof l.relevance === "number" ? Math.min(1, Math.max(0, l.relevance)) : null;
+        return {
+          workspace_id: ws!.id,
+          external_id: subject ? `competitor:${subject.toLowerCase()}:${h.url}` : h.url!,
+          url: h.url!,
+          subject,
+          source_name: hostOf(h.url!) ?? "News",
+          title: h.title?.slice(0, 500) ?? null,
+          excerpt: h.snippet?.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1").slice(0, 1000) ?? null,
+          published_at: parseDate(h.date, now),
+          sentiment,
+          topic: l.topic ? String(l.topic).slice(0, 60) : null,
+          relevance,
+          reach: null,
+        };
+      });
+    }
 
-    const rows = list.map((h, i) => {
-      const l = labels.get(i) ?? {};
-      const sentiment = ["positive", "neutral", "negative"].includes(String(l.sentiment)) ? String(l.sentiment) : null;
-      const relevance = typeof l.relevance === "number" ? Math.min(1, Math.max(0, l.relevance)) : null;
-      return {
-        workspace_id: ws.id,
-        external_id: h.url!,
-        url: h.url!,
-        source_name: hostOf(h.url!) ?? "News",
-        title: h.title?.slice(0, 500) ?? null,
-        excerpt: h.snippet?.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1").slice(0, 1000) ?? null,
-        published_at: parseDate(h.date, now),
-        sentiment,
-        topic: l.topic ? String(l.topic).slice(0, 60) : null,
-        relevance,
-        reach: null,
-      };
-    });
+    const terms = (ws.keywords.length ? ws.keywords : [ws.organisation_name]).slice(0, 4);
+    const rows = await toRows((await search(terms, 10)).slice(0, 40), ws.organisation_name, null);
+    for (const comp of (ws.competitors ?? []).slice(0, 3)) {
+      const name = comp.trim();
+      if (!name) continue;
+      rows.push(...(await toRows((await search([name], 8)).slice(0, 8), name, name)));
+    }
 
     if (rows.length) {
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -129,5 +140,5 @@ export const refreshMentions = createServerFn({ method: "POST" })
         .upsert(rows, { onConflict: "workspace_id,external_id", ignoreDuplicates: true });
       if (error) throw new Error("We found coverage but couldn't save it. Please try again.");
     }
-    return { found: rows.length };
+    return { found: rows.filter((r) => !r.subject).length, competitors: rows.filter((r) => r.subject).length };
   });

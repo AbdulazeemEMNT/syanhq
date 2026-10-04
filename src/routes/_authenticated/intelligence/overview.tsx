@@ -20,6 +20,7 @@ function useMentionStats() {
         .from("intelligence_mentions")
         .select("id, title, url, source_name, published_at, sentiment, topic, reach, relevance")
         .gte("published_at", since)
+        .is("subject", null)
         .order("published_at", { ascending: false })
         .limit(1000);
       if (error) throw error;
