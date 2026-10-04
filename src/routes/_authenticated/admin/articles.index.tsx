@@ -112,11 +112,11 @@ function ArticlesAdmin() {
   }
 
   async function upload(file: File) {
-    if (file.size > 5 * 1024 * 1024) return toast.error("Images must be under 5 MB.");
-    if (!file.type.startsWith("image/")) return toast.error("Please choose an image file.");
+    if (file.size > 5 * 1024 * 1024) { toast.error("Images must be under 5 MB."); return; }
+    if (!file.type.startsWith("image/")) { toast.error("Please choose an image file."); return; }
     const path = `articles/${crypto.randomUUID()}-${file.name.replace(/[^a-zA-Z0-9.]+/g, "-")}`;
     const { error } = await supabase.storage.from(WORK_COVER_BUCKET).upload(path, file, { contentType: file.type });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     set("cover_image_path", path);
     toast.success("Cover uploaded — save to keep it.");
   }
@@ -124,7 +124,7 @@ function ArticlesAdmin() {
   async function save(publish: boolean) {
     const e = validate(form);
     setErrors(e);
-    if (Object.keys(e).length) return toast.error("Please fix the highlighted fields.");
+    if (Object.keys(e).length) { toast.error("Please fix the highlighted fields."); return; }
     setBusy(true);
     const payload = {
       title: form.title.trim(),
@@ -151,7 +151,7 @@ function ArticlesAdmin() {
     setBusy(false);
     if (error) {
       if (error.code === "23505") setErrors({ slug: "Another article already uses this slug." });
-      return toast.error(error.code === "23505" ? "That slug is taken." : error.message);
+      { toast.error(error.code === "23505" ? "That slug is taken." : error.message); return; }
     }
     toast.success(publish ? "Article published" : "Draft saved");
     setEditing(null);
@@ -160,7 +160,7 @@ function ArticlesAdmin() {
 
   async function patch(a: Article, values: Partial<Article>, msg: string) {
     const { error } = await supabase.from("cms_articles").update(values).eq("id", a.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success(msg);
     refresh();
   }
@@ -168,7 +168,7 @@ function ArticlesAdmin() {
   async function remove(a: Article) {
     if (!confirm(`Permanently delete "${a.title}"? This cannot be undone.`)) return;
     const { error } = await supabase.from("cms_articles").delete().eq("id", a.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     if (a.cover_image_path) await supabase.storage.from(WORK_COVER_BUCKET).remove([a.cover_image_path]);
     if (editing === a.id) setEditing(null);
     toast.success("Article deleted");

@@ -101,7 +101,7 @@ export const inviteStaff = createServerFn({ method: "POST" })
     if (!user) {
       const { data: inv, error } = await sb.auth.admin.inviteUserByEmail(data.email, {
         redirectTo: data.redirectTo,
-        data: data.full_name ? { full_name: data.full_name } : undefined,
+        data: data.full_name ? { full_name: data.full_name } : {},
       });
       if (error) throw new Error(error.message);
       user = inv.user;
@@ -141,9 +141,9 @@ export const updateStaff = createServerFn({ method: "POST" })
     await assertManager(context);
     const sb = await admin();
     await assertEditable(sb, context.userId, data.user_id);
-    const patch: Record<string, string> = {};
-    if (data.role_preset) patch["role_preset"] = data.role_preset;
-    if (data.status) patch["status"] = data.status;
+    const patch: { role_preset?: string; status?: string } = {};
+    if (data.role_preset) patch.role_preset = data.role_preset;
+    if (data.status) patch.status = data.status;
     if (Object.keys(patch).length) {
       const { error } = await sb.from("staff_members").update(patch).eq("user_id", data.user_id);
       if (error) throw new Error(error.message);

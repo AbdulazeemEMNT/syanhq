@@ -76,8 +76,8 @@ function StaffSettings() {
 
   async function sendInvite(e: React.FormEvent) {
     e.preventDefault();
-    if (!/^\S+@\S+\.\S+$/.test(email.trim())) return toast.error("Enter a valid email address.");
-    if (!perms.length) return toast.error("Choose at least one permission.");
+    if (!/^\S+@\S+\.\S+$/.test(email.trim())) { toast.error("Enter a valid email address."); return; }
+    if (!perms.length) { toast.error("Choose at least one permission."); return; }
     setSending(true);
     try {
       const res = await invite({
