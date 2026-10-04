@@ -117,7 +117,7 @@ function SetupWizard() {
     setError(null);
     if (step === 0) {
       const r = orgSchema.safeParse({ name, website });
-      if (!r.success) return setError(r.error.issues[0].message);
+      if (!r.success) return setError(r.error.issues[0]?.message ?? "Please check your details");
       const key = `${name}|${website}`;
       if (key !== suggestedFor) {
         setKeywords(suggestKeywords(name, website));
