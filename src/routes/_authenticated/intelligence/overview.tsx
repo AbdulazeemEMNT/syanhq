@@ -3,23 +3,27 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { PRIORITIES, useMyWorkspace } from "@/lib/workspace";
+import { RefreshCoverage } from "@/components/intelligence/RefreshCoverage";
 
 export const Route = createFileRoute("/_authenticated/intelligence/overview")({
   head: () => ({ meta: [{ title: "Overview — SYAN Intelligence" }, { name: "robots", content: "noindex" }] }),
   component: IntelligenceOverview,
 });
 
-/** Only sources marked connected count; nothing on this page is estimated or simulated. */
-function useConnectedSources() {
+/** Figures come only from stored real mentions (last 30 days); nothing is estimated. */
+function useMentionStats() {
   return useQuery({
-    queryKey: ["intelligence", "connected-sources"],
+    queryKey: ["intelligence", "overview-stats"],
     queryFn: async () => {
-      const { count, error } = await supabase
-        .from("project_sources")
-        .select("id", { count: "exact", head: true })
-        .eq("is_connected", true);
-      if (error) return 0;
-      return count ?? 0;
+      const since = new Date(Date.now() - 30 * 864e5).toISOString();
+      const { data, error } = await supabase
+        .from("intelligence_mentions")
+        .select("id, title, url, source_name, published_at, sentiment, topic, reach, relevance")
+        .gte("published_at", since)
+        .order("published_at", { ascending: false })
+        .limit(1000);
+      if (error) throw error;
+      return data ?? [];
     },
   });
 }
@@ -40,11 +44,11 @@ function useOpenAlerts() {
   });
 }
 
-function Metric({ label, help }: { label: string; help: string }) {
+function Metric({ label, help, value }: { label: string; help: string; value?: string }) {
   return (
     <div className="soft-card p-6">
       <p className="text-sm font-semibold">{label}</p>
-      <p className="num display-lg mt-3 text-3xl text-muted-foreground">—</p>
+      <p className={`num display-lg mt-3 text-3xl ${value ? "text-navy" : "text-muted-foreground"}`}>{value ?? "—"}</p>
       <p className="mt-2 text-xs text-muted-foreground">{help}</p>
     </div>
   );
@@ -65,12 +69,28 @@ function Empty({ text }: { text: string }) {
 
 function IntelligenceOverview() {
   const { data: ws } = useMyWorkspace();
-  const { data: sources = 0, isLoading } = useConnectedSources();
+  const { data: mentions = [], isLoading } = useMentionStats();
   const { data: alerts = [] } = useOpenAlerts();
-  const connected = sources > 0;
-  const waiting = connected
-    ? "Gathering data from your connected sources — this appears once the first mentions arrive."
-    : "Appears once a monitoring source is connected.";
+  const connected = mentions.length > 0;
+  const waiting = "Appears once news coverage has been collected.";
+  const pos = mentions.filter((m) => m.sentiment === "positive").length;
+  const neg = mentions.filter((m) => m.sentiment === "negative").length;
+  const rated = mentions.filter((m) => m.sentiment).length;
+  const reachKnown = mentions.filter((m) => m.reach != null);
+  const reachTotal = reachKnown.reduce((t, m) => t + (m.reach ?? 0), 0);
+  const sentimentLabel = rated ? `${Math.round((pos / rated) * 100)}% positive` : undefined;
+  const negShare = rated ? neg / rated : 0;
+  const risk = !rated ? undefined : negShare >= 0.35 ? "High" : negShare >= 0.15 ? "Medium" : "Low";
+  const topics = Object.entries(
+    mentions.reduce<Record<string, number>>((acc, m) => { if (m.topic) acc[m.topic] = (acc[m.topic] ?? 0) + 1; return acc; }, {}),
+  ).sort((a, b) => b[1] - a[1]).slice(0, 6);
+  const important = [...mentions].sort((a, b) => (b.relevance ?? 0) - (a.relevance ?? 0)).slice(0, 5);
+  const weeks = [3, 2, 1, 0].map((w) => {
+    const end = Date.now() - w * 6048e5, start = end - 6048e5;
+    const inWeek = mentions.filter((m) => { const t = m.published_at ? Date.parse(m.published_at) : 0; return t > start && t <= end; });
+    return { label: w === 0 ? "This week" : `${w} wk ago`, total: inWeek.length, neg: inWeek.filter((m) => m.sentiment === "negative").length };
+  });
+  const maxWeek = Math.max(1, ...weeks.map((w) => w.total));
 
   return (
     <div className="space-y-8">
@@ -87,26 +107,34 @@ function IntelligenceOverview() {
           <div className="max-w-xl">
             <h2 className="font-serif text-xl font-bold">No monitoring data yet.</h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Connect a supported source to begin tracking conversations about your organisation — for
-              example news websites, social media or broadcast monitoring. Once connected, this page fills in
-              automatically.
+              News monitoring is connected. Check the news to collect real coverage of your names and keywords — this page fills in from what is found. Social media and broadcast sources are not connected yet.
             </p>
           </div>
-          <Link to="/intelligence/settings" className="rounded-full bg-navy px-5 py-2.5 text-sm font-semibold text-navy-foreground">
-            See how to connect a source
-          </Link>
+          <RefreshCoverage label="Check the news now" />
         </div>
       )}
 
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <Metric label="Total mentions" help="How often you were talked about in the selected period." />
-        <Metric label="Sentiment" help="Whether coverage is mostly positive, neutral or negative." />
-        <Metric label="Media reach" help="How many people the coverage could have reached." />
-        <Metric label="Reputation risk" help="Low, medium or high, based on negative or fast-growing stories." />
+        <Metric label="Total mentions" value={connected ? String(mentions.length) : undefined} help="News articles mentioning you in the last 30 days." />
+        <Metric label="Sentiment" value={sentimentLabel} help={rated ? `${neg} negative of ${rated} rated articles.` : "Whether coverage is mostly positive, neutral or negative."} />
+        <Metric label="Media reach" value={reachKnown.length ? new Intl.NumberFormat("en", { notation: "compact" }).format(reachTotal) : undefined} help={connected && !reachKnown.length ? "News sites do not publish audience figures, so reach is left blank rather than guessed." : "How many people the coverage could have reached."} />
+        <Metric label="Reputation risk" value={risk} help="Based on the share of negative coverage in the last 30 days." />
       </div>
 
       <Panel title="Trend over time">
-        <Empty text={`Mentions and sentiment over the last 30 days. ${waiting}`} />
+        {connected ? (
+          <div className="grid grid-cols-4 items-end gap-4">
+            {weeks.map((w) => (
+              <div key={w.label} className="text-center">
+                <div className="mx-auto flex h-32 w-full max-w-16 flex-col justify-end overflow-hidden rounded-lg bg-secondary">
+                  <div className="bg-navy" style={{ height: `${(w.total / maxWeek) * 100}%` }} title={`${w.total} mentions, ${w.neg} negative`} />
+                </div>
+                <p className="num mt-2 text-sm font-semibold">{w.total}</p>
+                <p className="text-xs text-muted-foreground">{w.label}</p>
+              </div>
+            ))}
+          </div>
+        ) : <Empty text={`Mentions per week over the last month. ${waiting}`} />}
       </Panel>
 
       <div className="grid gap-5 lg:grid-cols-2">
@@ -129,10 +157,21 @@ function IntelligenceOverview() {
           )}
         </Panel>
         <Panel title="Recent important mentions">
-          <Empty text={`The most significant articles and posts about you. ${waiting}`} />
+          {important.length ? (
+            <ul className="space-y-3">
+              {important.map((m) => (
+                <li key={m.id} className="text-sm">
+                  <a href={m.url ?? undefined} target="_blank" rel="noopener noreferrer" className="font-semibold hover:underline">{m.title ?? "Untitled"}</a>
+                  <p className="text-xs text-muted-foreground">{m.source_name}{m.sentiment ? ` · ${m.sentiment}` : ""}</p>
+                </li>
+              ))}
+            </ul>
+          ) : <Empty text={`The most significant articles about you. ${waiting}`} />}
         </Panel>
         <Panel title="Top topics">
-          <Empty text={`The themes people connect with your organisation. ${waiting}`} />
+          {topics.length ? (
+            <div className="flex flex-wrap gap-2">{topics.map(([t, n]) => <span key={t} className="pill">{t} · {n}</span>)}</div>
+          ) : <Empty text={`The themes people connect with your organisation. ${waiting}`} />}
         </Panel>
         <Panel title="What we're tracking">
           {ws ? (
