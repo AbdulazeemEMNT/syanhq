@@ -11,6 +11,7 @@ const input = z.object({
 });
 
 export type JobDraft = {
+  style: string;
   short_description: string;
   full_description: string;
   responsibilities: string[];
@@ -20,7 +21,7 @@ export type JobDraft = {
 export const draftJobDescription = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) => input.parse(d))
-  .handler(async ({ data, context }): Promise<JobDraft> => {
+  .handler(async ({ data, context }): Promise<JobDraft[]> => {
     const { data: isAdmin } = await context.supabase.rpc("has_role", {
       _user_id: context.userId,
       _role: "admin",
@@ -51,7 +52,7 @@ export const draftJobDescription = createServerFn({ method: "POST" })
     const result = streamText({
       model: provider.responses("openai/gpt-6-astra"),
       system:
-        "You write job adverts for SYAN Media, a Lagos-based reputation, media relations, search/AI visibility and intelligence agency. Write in confident, precise British English. Return ONLY a JSON object with keys: short_description (1-2 sentences, max 220 chars), full_description (2-3 short paragraphs), responsibilities (5-8 strings), requirements (5-8 strings). No markdown.",
+        "You write job adverts for SYAN Media, a Lagos-based reputation, media relations, search/AI visibility and intelligence agency. Write in confident, precise British English. Write THREE distinct drafts of the same role in different styles: 1) \"Concise\" — crisp and to the point; 2) \"Detailed\" — thorough and structured; 3) \"Editorial\" — bold, persuasive, brand-led. Return ONLY a JSON object {\"drafts\": [...]} with exactly 3 items, each with keys: style (the style name), short_description (1-2 sentences, max 220 chars), full_description (2-3 short paragraphs), responsibilities (5-8 strings), requirements (5-8 strings). No markdown.",
       prompt: `Job title: ${data.title}\nDepartment: ${data.department || "-"}\nEmployment type: ${data.employment_type || "-"}\nLocation: ${data.location || "-"}\nRole notes: ${data.notes || "-"}`,
       providerOptions: {
         openai: {
@@ -66,17 +67,20 @@ export const draftJobDescription = createServerFn({ method: "POST" })
     const text = await result.text;
     const match = text.match(/\{[\s\S]*\}/);
     if (!match) throw new Error("The AI returned an unexpected response. Please try again.");
-    let parsed: Partial<JobDraft>;
+    let parsed: { drafts?: Partial<JobDraft>[] };
     try {
       parsed = JSON.parse(match[0]);
     } catch {
       throw new Error("The AI returned an unexpected response. Please try again.");
     }
     const list = (v: unknown) => (Array.isArray(v) ? v.map(String).filter(Boolean).slice(0, 10) : []);
-    return {
-      short_description: String(parsed.short_description ?? "").slice(0, 400),
-      full_description: String(parsed.full_description ?? ""),
-      responsibilities: list(parsed.responsibilities),
-      requirements: list(parsed.requirements),
-    };
+    const drafts = (parsed.drafts ?? []).slice(0, 3).map((d, i) => ({
+      style: String(d.style ?? `Draft ${i + 1}`).slice(0, 40),
+      short_description: String(d.short_description ?? "").slice(0, 400),
+      full_description: String(d.full_description ?? ""),
+      responsibilities: list(d.responsibilities),
+      requirements: list(d.requirements),
+    }));
+    if (!drafts.length) throw new Error("The AI returned no drafts. Please try again.");
+    return drafts;
   });
