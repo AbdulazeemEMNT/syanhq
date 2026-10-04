@@ -9,6 +9,9 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth")({
   ssr: false,
+  validateSearch: (s: Record<string, unknown>): { next?: string | undefined } => ({
+    next: typeof s["next"] === "string" && s["next"].startsWith("/") && !s["next"].startsWith("//") ? s["next"] : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Staff Sign In — SYAN Media" },
@@ -30,15 +33,20 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
+  const { next } = Route.useSearch();
+  const go = () => {
+    if (next) window.location.assign(next);
+    else navigate({ to: "/admin", replace: true });
+  };
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/admin", replace: true });
+      if (data.session) go();
     });
-  }, [navigate]);
+  }, [navigate, next]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -48,7 +56,7 @@ function AuthPage() {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
       const { data } = await supabase.auth.getSession();
-      if (data.session) navigate({ to: "/admin", replace: true });
+      if (data.session) go();
     } catch (err) {
       const message = err instanceof Error ? err.message : "Authentication failed";
       toast.error(
@@ -64,7 +72,7 @@ function AuthPage() {
   async function onGoogle() {
     try {
       const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
+        redirect_uri: next ? window.location.origin + next : window.location.origin,
         extraParams: { prompt: "select_account" },
       });
 
@@ -76,7 +84,7 @@ function AuthPage() {
       if (result.redirected) return;
 
       const { data } = await supabase.auth.getSession();
-      if (data.session) navigate({ to: "/admin", replace: true });
+      if (data.session) go();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Google sign-in failed");
     }

@@ -15,12 +15,14 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CookiesRouteImport } from './routes/cookies'
+import { Route as McpRouteImport } from './routes/mcp'
 import { Route as PressRouteImport } from './routes/press'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as TeamRouteImport } from './routes/team'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as AuthenticatedIntelligenceRouteRouteImport } from './routes/_authenticated/intelligence/route'
 import { Route as AuthenticatedIntelligenceSetupRouteImport } from './routes/_authenticated/intelligence-setup'
@@ -34,6 +36,7 @@ import { Route as ServicesIndexRouteImport } from './routes/services.index'
 import { Route as ServicesSlugRouteImport } from './routes/services.$slug'
 import { Route as WorkIndexRouteImport } from './routes/work.index'
 import { Route as WorkSlugRouteImport } from './routes/work.$slug'
+import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin/settings'
 import { Route as AuthenticatedIntelligenceAskRouteImport } from './routes/_authenticated/intelligence/ask'
@@ -82,6 +85,11 @@ const CookiesRoute = CookiesRouteImport.update({
   path: '/cookies',
   getParentRoute: () => rootRouteImport,
 } as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PressRoute = PressRouteImport.update({
   id: '/press',
   path: '/press',
@@ -112,6 +120,12 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -177,6 +191,11 @@ const WorkIndexRoute = WorkIndexRouteImport.update({
 const WorkSlugRoute = WorkSlugRouteImport.update({
   id: '/work/$slug',
   path: '/work/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
@@ -293,6 +312,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
+  '/mcp': typeof McpRoute
   '/press': typeof PressRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
@@ -301,6 +321,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/intelligence': typeof AuthenticatedIntelligenceRouteRouteWithChildren
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/intelligence-setup': typeof AuthenticatedIntelligenceSetupRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/insights/$slug': typeof InsightsSlugRoute
@@ -312,6 +333,7 @@ export interface FileRoutesByFullPath {
   '/intelligence/': typeof IntelligenceIndexRoute
   '/services/': typeof ServicesIndexRoute
   '/work/': typeof WorkIndexRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRouteWithChildren
   '/intelligence/ask': typeof AuthenticatedIntelligenceAskRoute
   '/intelligence/competitors': typeof AuthenticatedIntelligenceCompetitorsRoute
@@ -337,6 +359,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
+  '/mcp': typeof McpRoute
   '/press': typeof PressRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
@@ -344,6 +367,7 @@ export interface FileRoutesByTo {
   '/team': typeof TeamRoute
   '/terms': typeof TermsRoute
   '/intelligence': typeof IntelligenceIndexRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/intelligence-setup': typeof AuthenticatedIntelligenceSetupRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/insights/$slug': typeof InsightsSlugRoute
@@ -354,6 +378,7 @@ export interface FileRoutesByTo {
   '/insights': typeof InsightsIndexRoute
   '/services': typeof ServicesIndexRoute
   '/work': typeof WorkIndexRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/intelligence/ask': typeof AuthenticatedIntelligenceAskRoute
   '/intelligence/competitors': typeof AuthenticatedIntelligenceCompetitorsRoute
   '/intelligence/mentions': typeof AuthenticatedIntelligenceMentionsRoute
@@ -380,6 +405,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
+  '/mcp': typeof McpRoute
   '/press': typeof PressRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
@@ -388,6 +414,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/_authenticated/intelligence': typeof AuthenticatedIntelligenceRouteRouteWithChildren
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/intelligence-setup': typeof AuthenticatedIntelligenceSetupRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/insights/$slug': typeof InsightsSlugRoute
@@ -399,6 +426,7 @@ export interface FileRoutesById {
   '/intelligence/': typeof IntelligenceIndexRoute
   '/services/': typeof ServicesIndexRoute
   '/work/': typeof WorkIndexRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRouteWithChildren
   '/_authenticated/intelligence/ask': typeof AuthenticatedIntelligenceAskRoute
   '/_authenticated/intelligence/competitors': typeof AuthenticatedIntelligenceCompetitorsRoute
@@ -426,6 +454,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/cookies'
+    | '/mcp'
     | '/press'
     | '/pricing'
     | '/privacy'
@@ -434,6 +463,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin'
     | '/intelligence'
+    | '/.well-known/oauth-protected-resource'
     | '/intelligence-setup'
     | '/careers/$slug'
     | '/insights/$slug'
@@ -445,6 +475,7 @@ export interface FileRouteTypes {
     | '/intelligence/'
     | '/services/'
     | '/work/'
+    | '/.lovable/oauth/consent'
     | '/admin/settings'
     | '/intelligence/ask'
     | '/intelligence/competitors'
@@ -470,6 +501,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/cookies'
+    | '/mcp'
     | '/press'
     | '/pricing'
     | '/privacy'
@@ -477,6 +509,7 @@ export interface FileRouteTypes {
     | '/team'
     | '/terms'
     | '/intelligence'
+    | '/.well-known/oauth-protected-resource'
     | '/intelligence-setup'
     | '/careers/$slug'
     | '/insights/$slug'
@@ -487,6 +520,7 @@ export interface FileRouteTypes {
     | '/insights'
     | '/services'
     | '/work'
+    | '/.lovable/oauth/consent'
     | '/intelligence/ask'
     | '/intelligence/competitors'
     | '/intelligence/mentions'
@@ -512,6 +546,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/cookies'
+    | '/mcp'
     | '/press'
     | '/pricing'
     | '/privacy'
@@ -520,6 +555,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/_authenticated/admin'
     | '/_authenticated/intelligence'
+    | '/.well-known/oauth-protected-resource'
     | '/_authenticated/intelligence-setup'
     | '/careers/$slug'
     | '/insights/$slug'
@@ -531,6 +567,7 @@ export interface FileRouteTypes {
     | '/intelligence/'
     | '/services/'
     | '/work/'
+    | '/.lovable/oauth/consent'
     | '/_authenticated/admin/settings'
     | '/_authenticated/intelligence/ask'
     | '/_authenticated/intelligence/competitors'
@@ -558,12 +595,14 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
   CookiesRoute: typeof CookiesRoute
+  McpRoute: typeof McpRoute
   PressRoute: typeof PressRoute
   PricingRoute: typeof PricingRoute
   PrivacyRoute: typeof PrivacyRoute
   SearchRoute: typeof SearchRoute
   TeamRoute: typeof TeamRoute
   TermsRoute: typeof TermsRoute
+  Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   CareersSlugRoute: typeof CareersSlugRoute
   InsightsSlugRoute: typeof InsightsSlugRoute
   IntelligenceDashboardRoute: typeof IntelligenceDashboardRoute
@@ -574,6 +613,7 @@ export interface RootRouteChildren {
   IntelligenceIndexRoute: typeof IntelligenceIndexRoute
   ServicesIndexRoute: typeof ServicesIndexRoute
   WorkIndexRoute: typeof WorkIndexRoute
+  DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -620,6 +660,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CookiesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/press': {
       id: '/press'
       path: '/press'
@@ -660,6 +707,13 @@ declare module '@tanstack/react-router' {
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin': {
@@ -751,6 +805,13 @@ declare module '@tanstack/react-router' {
       path: '/work/$slug'
       fullPath: '/work/$slug'
       preLoaderRoute: typeof WorkSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin/': {
@@ -987,12 +1048,15 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
   CookiesRoute: CookiesRoute,
+  McpRoute: McpRoute,
   PressRoute: PressRoute,
   PricingRoute: PricingRoute,
   PrivacyRoute: PrivacyRoute,
   SearchRoute: SearchRoute,
   TeamRoute: TeamRoute,
   TermsRoute: TermsRoute,
+  Char91DotwellKnownChar93OauthProtectedResourceRoute:
+    Char91DotwellKnownChar93OauthProtectedResourceRoute,
   CareersSlugRoute: CareersSlugRoute,
   InsightsSlugRoute: InsightsSlugRoute,
   IntelligenceDashboardRoute: IntelligenceDashboardRoute,
@@ -1003,6 +1067,7 @@ const rootRouteChildren: RootRouteChildren = {
   IntelligenceIndexRoute: IntelligenceIndexRoute,
   ServicesIndexRoute: ServicesIndexRoute,
   WorkIndexRoute: WorkIndexRoute,
+  DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

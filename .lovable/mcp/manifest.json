@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "sdk_version": "3.0.4",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://xhgmvwhvcmforpsfpoae.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "syan-media-studio",
+      "version": "0.1.0",
+      "title": "Syan Media Studio"
+    },
+    "tools": [
+      {
+        "name": "get_workspace",
+        "title": "Get Intelligence workspace",
+        "description": "Show your SYAN Intelligence organisation, monitored keywords, competitors and priorities.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {},
+          "additionalProperties": false
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_mentions",
+        "title": "List monitored mentions",
+        "description": "List real monitored media mentions you can access, with optional sentiment, topic and date filters.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "sentiment": {
+              "description": "Only this sentiment.",
+              "type": "string",
+              "enum": [
+                "positive",
+                "neutral",
+                "negative"
+              ]
+            },
+            "topic": {
+              "description": "Only this topic.",
+              "type": "string",
+              "minLength": 1
+            },
+            "days": {
+              "description": "Only mentions from the last N days.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 365
+            },
+            "sort": {
+              "description": "Sort order (default recent).",
+              "type": "string",
+              "enum": [
+                "recent",
+                "relevant",
+                "reach"
+              ]
+            },
+            "limit": {
+              "description": "Max results (default 25).",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          "additionalProperties": false
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
