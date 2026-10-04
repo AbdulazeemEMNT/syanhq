@@ -22,3 +22,4 @@
 - `/admin/*` access is resolved once in the admin layout's `beforeLoad` (via `my_permissions()`) after the `_authenticated` session gate; users with no permissions get a no-access screen with no CMS chrome. There is no self-service sign-up in the UI.
 - Intelligence client workspaces live in `intelligence_workspaces` (one per owner, owner-only RLS); users without a staff role and no workspace are redirected to `/intelligence-setup`.
 - Monitored mentions live in `intelligence_mentions` (per workspace); clients only read (owner or staff via RLS) and rows are written only by the `refreshMentions` server function (news search via the Firecrawl connector, sentiment/topic/relevance labelled by Lovable AI; reach left null when the source gives none) — never seeded.
+- The MCP server (src/lib/mcp/, mounted at /mcp) uses the app's sign-in as an OAuth server; tools query as the signed-in user so RLS applies — never a service-role client.
