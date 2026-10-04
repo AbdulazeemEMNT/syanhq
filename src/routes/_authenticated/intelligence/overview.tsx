@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useProjects } from "@/lib/admin-data";
+import { PRIORITIES, useMyWorkspace } from "@/lib/workspace";
 
 export const Route = createFileRoute("/_authenticated/intelligence/overview")({
   component: IntelligenceOverview,
@@ -20,6 +21,7 @@ function useCount(table: "project_alerts" | "intelligence_reports" | "project_ke
 
 function IntelligenceOverview() {
   const { data: projects = [], isLoading } = useProjects();
+  const { data: workspace } = useMyWorkspace();
   const alerts = useCount("project_alerts");
   const reports = useCount("intelligence_reports");
   const keywords = useCount("project_keywords");
@@ -34,12 +36,40 @@ function IntelligenceOverview() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="display-lg text-3xl">Intelligence overview</h1>
+        <h1 className="display-lg text-3xl">
+          {workspace ? workspace.organisation_name : "Intelligence overview"}
+        </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Configure client projects, monitoring inputs and delivery. Live metrics appear only once a
-          data provider is connected — nothing here is simulated.
+          Live metrics appear only once a data provider is connected — nothing here is simulated.
         </p>
       </div>
+
+      {workspace && (
+        <div className="soft-card grid gap-6 p-8 md:grid-cols-3">
+          <div>
+            <p className="eyebrow">Monitoring</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {workspace.keywords.map((k) => <span key={k} className="pill">{k}</span>)}
+            </div>
+          </div>
+          <div>
+            <p className="eyebrow">Competitors</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {workspace.competitors.length
+                ? workspace.competitors.map((k) => <span key={k} className="pill">{k}</span>)
+                : <span className="text-sm text-muted-foreground">None added yet</span>}
+            </div>
+          </div>
+          <div>
+            <p className="eyebrow">Priorities</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {PRIORITIES.filter((p) => workspace.priorities.includes(p.id)).map((p) => (
+                <span key={p.id} className="pill">{p.label}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map((c) => (
