@@ -4,7 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Search as SearchIcon } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero, Section } from "@/components/site/Primitives";
-import { services, insights, team, careers } from "@/content/site";
+import { services, team, careers } from "@/content/site";
+import { articlesQuery } from "@/lib/articles.functions";
 import { worksQuery } from "@/routes/work.index";
 
 export const Route = createFileRoute("/search")({
@@ -33,13 +34,6 @@ const staticIndex: Result[] = [
     to: "/services/$slug",
     params: { slug: s.slug },
   })),
-  ...insights.map((i) => ({
-    title: i.title,
-    kind: "Insight",
-    text: `${i.excerpt} ${i.category}`,
-    to: "/insights/$slug",
-    params: { slug: i.slug },
-  })),
   ...team.map((m) => ({ title: m.name, kind: "Team", text: `${m.role} ${m.focus}`, to: "/team" })),
   ...careers.map((c) => ({
     title: c.title,
@@ -58,10 +52,18 @@ const staticIndex: Result[] = [
 function SearchPage() {
   const [query, setQuery] = useState("");
   const { data: works = [] } = useQuery(worksQuery);
+  const { data: insights = [] } = useQuery(articlesQuery);
 
   const index = useMemo<Result[]>(
     () => [
       ...staticIndex,
+      ...insights.map((i) => ({
+        title: i.title,
+        kind: "Insight",
+        text: `${i.excerpt ?? ""} ${i.category} ${i.tags.join(" ")}`,
+        to: "/insights/$slug",
+        params: { slug: i.slug },
+      })),
       ...works.map((c) => ({
         title: c.client,
         kind: "Case study",
@@ -70,7 +72,7 @@ function SearchPage() {
         params: { slug: c.slug },
       })),
     ],
-    [works],
+    [works, insights],
   );
 
   const results = useMemo(() => {
