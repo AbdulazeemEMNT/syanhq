@@ -44,7 +44,7 @@ function useOpenAlerts() {
   });
 }
 
-function Metric({ label, help, value }: { label: string; help: string; value?: string }) {
+function Metric({ label, help, value }: { label: string; help: string; value?: string | undefined }) {
   return (
     <div className="soft-card p-6">
       <p className="text-sm font-semibold">{label}</p>
