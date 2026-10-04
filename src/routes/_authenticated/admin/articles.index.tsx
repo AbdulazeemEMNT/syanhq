@@ -139,8 +139,8 @@ function ArticlesAdmin() {
         ? (() => {
             // Interpret the picked day in local time; today or earlier goes live now.
             const picked = new Date(`${form.published_at}T00:00:00`);
-            const keep = editing && a0?.published_at?.slice(0, 10) === form.published_at;
-            if (keep) return a0!.published_at as string;
+            const a0 = articles.find((x) => x.id === editing);
+            if (a0?.published_at && a0.published_at.slice(0, 10) === form.published_at) return a0.published_at;
             return picked > new Date() ? picked.toISOString() : new Date(Math.min(Date.now(), picked.getTime() + 864e5 - 1)).toISOString();
           })()
         : publish ? new Date().toISOString() : null,
