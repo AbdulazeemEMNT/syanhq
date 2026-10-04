@@ -71,6 +71,7 @@ const stats = [
 
 function Index() {
   const { data: works } = useSuspenseQuery(worksQuery);
+  const { data: insights } = useSuspenseQuery(articlesQuery);
   return (
     <SiteLayout>
       {/* Hero */}
