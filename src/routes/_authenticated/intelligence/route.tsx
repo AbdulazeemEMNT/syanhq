@@ -48,16 +48,16 @@ function IntelligenceLayout() {
       <header className="border-b border-hairline bg-card">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-4 lg:px-8">
           <div className="flex items-center gap-4">
-            <Link to="/" className="font-serif text-lg font-bold">
+            <Link to="/intelligence/overview" className="font-serif text-lg font-bold">
               SYAN
             </Link>
             <span className="eyebrow">SYAN Intelligence</span>
           </div>
           <div className="flex items-center gap-3 text-sm">
             <span className="text-muted-foreground">{user?.email}</span>
-            <span className="rounded-full border border-hairline px-3 py-1 text-xs">
-              {roles.length ? roles.join(", ") : "no role"}
-            </span>
+            {roles.length > 0 && (
+              <span className="rounded-full border border-hairline px-3 py-1 text-xs">SYAN team</span>
+            )}
             <Button variant="outline" size="sm" className="rounded-full" onClick={signOut}>
               Sign out
             </Button>
@@ -78,20 +78,6 @@ function IntelligenceLayout() {
           
         </div>
       </header>
-
-      {roles.length === 0 && (
-        <div className="mx-auto max-w-7xl px-5 pt-6 lg:px-8">
-          <div className="soft-card flex flex-wrap items-center justify-between gap-4 p-6">
-            <div>
-              <p className="font-serif text-base font-bold">No staff role assigned</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                You can see this shell, but project data stays hidden until an admin grants you a
-                role.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
 
       <main className="mx-auto max-w-7xl px-5 py-8 lg:px-8">
         <Outlet />

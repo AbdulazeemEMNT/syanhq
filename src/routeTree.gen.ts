@@ -32,7 +32,6 @@ import { Route as CareersSlugRouteImport } from './routes/careers.$slug'
 import { Route as InsightsIndexRouteImport } from './routes/insights.index'
 import { Route as InsightsSlugRouteImport } from './routes/insights.$slug'
 import { Route as IntelligenceIndexRouteImport } from './routes/intelligence.index'
-import { Route as IntelligenceDashboardRouteImport } from './routes/intelligence.dashboard'
 import { Route as ServicesIndexRouteImport } from './routes/services.index'
 import { Route as ServicesSlugRouteImport } from './routes/services.$slug'
 import { Route as WorkIndexRouteImport } from './routes/work.index'
@@ -172,11 +171,6 @@ const InsightsSlugRoute = InsightsSlugRouteImport.update({
 const IntelligenceIndexRoute = IntelligenceIndexRouteImport.update({
   id: '/intelligence/',
   path: '/intelligence/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IntelligenceDashboardRoute = IntelligenceDashboardRouteImport.update({
-  id: '/intelligence/dashboard',
-  path: '/intelligence/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServicesIndexRoute = ServicesIndexRouteImport.update({
@@ -332,7 +326,6 @@ export interface FileRoutesByFullPath {
   '/api/ask': typeof ApiAskRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/insights/$slug': typeof InsightsSlugRoute
-  '/intelligence/dashboard': typeof IntelligenceDashboardRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/work/$slug': typeof WorkSlugRoute
   '/careers/': typeof CareersIndexRoute
@@ -379,7 +372,6 @@ export interface FileRoutesByTo {
   '/api/ask': typeof ApiAskRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/insights/$slug': typeof InsightsSlugRoute
-  '/intelligence/dashboard': typeof IntelligenceDashboardRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/work/$slug': typeof WorkSlugRoute
   '/careers': typeof CareersIndexRoute
@@ -427,7 +419,6 @@ export interface FileRoutesById {
   '/api/ask': typeof ApiAskRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/insights/$slug': typeof InsightsSlugRoute
-  '/intelligence/dashboard': typeof IntelligenceDashboardRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/work/$slug': typeof WorkSlugRoute
   '/careers/': typeof CareersIndexRoute
@@ -477,7 +468,6 @@ export interface FileRouteTypes {
     | '/api/ask'
     | '/careers/$slug'
     | '/insights/$slug'
-    | '/intelligence/dashboard'
     | '/services/$slug'
     | '/work/$slug'
     | '/careers/'
@@ -524,7 +514,6 @@ export interface FileRouteTypes {
     | '/api/ask'
     | '/careers/$slug'
     | '/insights/$slug'
-    | '/intelligence/dashboard'
     | '/services/$slug'
     | '/work/$slug'
     | '/careers'
@@ -571,7 +560,6 @@ export interface FileRouteTypes {
     | '/api/ask'
     | '/careers/$slug'
     | '/insights/$slug'
-    | '/intelligence/dashboard'
     | '/services/$slug'
     | '/work/$slug'
     | '/careers/'
@@ -618,7 +606,6 @@ export interface RootRouteChildren {
   ApiAskRoute: typeof ApiAskRoute
   CareersSlugRoute: typeof CareersSlugRoute
   InsightsSlugRoute: typeof InsightsSlugRoute
-  IntelligenceDashboardRoute: typeof IntelligenceDashboardRoute
   ServicesSlugRoute: typeof ServicesSlugRoute
   WorkSlugRoute: typeof WorkSlugRoute
   CareersIndexRoute: typeof CareersIndexRoute
@@ -790,13 +777,6 @@ declare module '@tanstack/react-router' {
       path: '/intelligence'
       fullPath: '/intelligence/'
       preLoaderRoute: typeof IntelligenceIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/intelligence/dashboard': {
-      id: '/intelligence/dashboard'
-      path: '/intelligence/dashboard'
-      fullPath: '/intelligence/dashboard'
-      preLoaderRoute: typeof IntelligenceDashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/services/': {
@@ -1080,7 +1060,6 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAskRoute: ApiAskRoute,
   CareersSlugRoute: CareersSlugRoute,
   InsightsSlugRoute: InsightsSlugRoute,
-  IntelligenceDashboardRoute: IntelligenceDashboardRoute,
   ServicesSlugRoute: ServicesSlugRoute,
   WorkSlugRoute: WorkSlugRoute,
   CareersIndexRoute: CareersIndexRoute,

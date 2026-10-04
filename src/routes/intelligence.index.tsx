@@ -64,7 +64,8 @@ function IntelligenceLanding() {
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
             <Link
-              to="/contact"
+              to="/intelligence/sign-in"
+              search={{ mode: "signup" }}
               className="inline-flex items-center gap-3 bg-[color:var(--gold)] px-7 py-4 rounded-full text-sm font-semibold text-navy hover:opacity-90"
             >
               Get Started <ArrowRight className="h-4 w-4" />
@@ -305,7 +306,8 @@ function IntelligenceLanding() {
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link
-              to="/contact"
+              to="/intelligence/sign-in"
+              search={{ mode: "signup" }}
               className="inline-flex items-center gap-3 bg-[color:var(--gold)] px-7 py-4 rounded-full text-sm font-semibold text-navy hover:opacity-90"
             >
               Get Started <ArrowRight className="h-4 w-4" />
