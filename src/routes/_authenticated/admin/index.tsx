@@ -24,7 +24,7 @@ function useCount(
     queryKey: ["count", table, status ?? "all"],
     queryFn: async () => {
       let q = supabase.from(table).select("*", { count: "exact", head: true });
-      if (status) q = q.eq("status", status);
+      if (status) q = (q as any).eq("status", status);
       const { count, error } = await q;
       if (error) throw error;
       return count ?? 0;
