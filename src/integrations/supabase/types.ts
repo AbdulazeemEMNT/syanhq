@@ -437,6 +437,65 @@ export type Database = {
         }
         Relationships: []
       }
+      intelligence_mentions: {
+        Row: {
+          author: string | null
+          created_at: string
+          excerpt: string | null
+          external_id: string | null
+          id: string
+          published_at: string | null
+          reach: number | null
+          relevance: number | null
+          sentiment: string | null
+          source_name: string
+          title: string | null
+          topic: string | null
+          url: string | null
+          workspace_id: string
+        }
+        Insert: {
+          author?: string | null
+          created_at?: string
+          excerpt?: string | null
+          external_id?: string | null
+          id?: string
+          published_at?: string | null
+          reach?: number | null
+          relevance?: number | null
+          sentiment?: string | null
+          source_name: string
+          title?: string | null
+          topic?: string | null
+          url?: string | null
+          workspace_id: string
+        }
+        Update: {
+          author?: string | null
+          created_at?: string
+          excerpt?: string | null
+          external_id?: string | null
+          id?: string
+          published_at?: string | null
+          reach?: number | null
+          relevance?: number | null
+          sentiment?: string | null
+          source_name?: string
+          title?: string | null
+          topic?: string | null
+          url?: string | null
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "intelligence_mentions_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "intelligence_workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       intelligence_projects: {
         Row: {
           client_name: string
