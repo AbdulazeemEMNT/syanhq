@@ -99,6 +99,13 @@
       "when": 1791151930160,
       "tag": "0013_intelligence_workspaces",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1791152492494,
+      "tag": "0014_intelligence_mentions",
+      "breakpoints": true
     }
   ]
 }
