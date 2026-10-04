@@ -26,6 +26,7 @@ import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } fr
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as AuthenticatedIntelligenceRouteRouteImport } from './routes/_authenticated/intelligence/route'
 import { Route as AuthenticatedIntelligenceSetupRouteImport } from './routes/_authenticated/intelligence-setup'
+import { Route as ApiAskRouteImport } from './routes/api/ask'
 import { Route as CareersIndexRouteImport } from './routes/careers.index'
 import { Route as CareersSlugRouteImport } from './routes/careers.$slug'
 import { Route as InsightsIndexRouteImport } from './routes/insights.index'
@@ -143,6 +144,11 @@ const AuthenticatedIntelligenceSetupRoute =
     path: '/intelligence-setup',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ApiAskRoute = ApiAskRouteImport.update({
+  id: '/api/ask',
+  path: '/api/ask',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CareersIndexRoute = CareersIndexRouteImport.update({
   id: '/careers/',
   path: '/careers/',
@@ -323,6 +329,7 @@ export interface FileRoutesByFullPath {
   '/intelligence': typeof AuthenticatedIntelligenceRouteRouteWithChildren
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/intelligence-setup': typeof AuthenticatedIntelligenceSetupRoute
+  '/api/ask': typeof ApiAskRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/insights/$slug': typeof InsightsSlugRoute
   '/intelligence/dashboard': typeof IntelligenceDashboardRoute
@@ -369,6 +376,7 @@ export interface FileRoutesByTo {
   '/intelligence': typeof IntelligenceIndexRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/intelligence-setup': typeof AuthenticatedIntelligenceSetupRoute
+  '/api/ask': typeof ApiAskRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/insights/$slug': typeof InsightsSlugRoute
   '/intelligence/dashboard': typeof IntelligenceDashboardRoute
@@ -416,6 +424,7 @@ export interface FileRoutesById {
   '/_authenticated/intelligence': typeof AuthenticatedIntelligenceRouteRouteWithChildren
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/intelligence-setup': typeof AuthenticatedIntelligenceSetupRoute
+  '/api/ask': typeof ApiAskRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/insights/$slug': typeof InsightsSlugRoute
   '/intelligence/dashboard': typeof IntelligenceDashboardRoute
@@ -465,6 +474,7 @@ export interface FileRouteTypes {
     | '/intelligence'
     | '/.well-known/oauth-protected-resource'
     | '/intelligence-setup'
+    | '/api/ask'
     | '/careers/$slug'
     | '/insights/$slug'
     | '/intelligence/dashboard'
@@ -511,6 +521,7 @@ export interface FileRouteTypes {
     | '/intelligence'
     | '/.well-known/oauth-protected-resource'
     | '/intelligence-setup'
+    | '/api/ask'
     | '/careers/$slug'
     | '/insights/$slug'
     | '/intelligence/dashboard'
@@ -557,6 +568,7 @@ export interface FileRouteTypes {
     | '/_authenticated/intelligence'
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/intelligence-setup'
+    | '/api/ask'
     | '/careers/$slug'
     | '/insights/$slug'
     | '/intelligence/dashboard'
@@ -603,6 +615,7 @@ export interface RootRouteChildren {
   TeamRoute: typeof TeamRoute
   TermsRoute: typeof TermsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  ApiAskRoute: typeof ApiAskRoute
   CareersSlugRoute: typeof CareersSlugRoute
   InsightsSlugRoute: typeof InsightsSlugRoute
   IntelligenceDashboardRoute: typeof IntelligenceDashboardRoute
@@ -736,6 +749,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/intelligence-setup'
       preLoaderRoute: typeof AuthenticatedIntelligenceSetupRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/api/ask': {
+      id: '/api/ask'
+      path: '/api/ask'
+      fullPath: '/api/ask'
+      preLoaderRoute: typeof ApiAskRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/careers/': {
       id: '/careers/'
@@ -1057,6 +1077,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  ApiAskRoute: ApiAskRoute,
   CareersSlugRoute: CareersSlugRoute,
   InsightsSlugRoute: InsightsSlugRoute,
   IntelligenceDashboardRoute: IntelligenceDashboardRoute,
