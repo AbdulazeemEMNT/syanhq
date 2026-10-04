@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
+import { useMyWorkspace } from "@/lib/workspace";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyRoles, useSession } from "@/lib/admin-data";
@@ -27,7 +29,15 @@ function IntelligenceLayout() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { data: user } = useSession();
-  const { data: roles = [] } = useMyRoles();
+  const { data: roles = [], isSuccess: rolesLoaded } = useMyRoles();
+  const workspace = useMyWorkspace();
+
+  // New organisations (no SYAN staff role, no workspace yet) start with the setup wizard.
+  useEffect(() => {
+    if (rolesLoaded && roles.length === 0 && workspace.isSuccess && !workspace.data) {
+      navigate({ to: "/intelligence-setup", replace: true });
+    }
+  }, [rolesLoaded, roles.length, workspace.isSuccess, workspace.data, navigate]);
 
   async function signOut() {
     await queryClient.cancelQueries();

@@ -23,6 +23,7 @@ import { Route as TeamRouteImport } from './routes/team'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as AuthenticatedIntelligenceRouteRouteImport } from './routes/_authenticated/intelligence/route'
+import { Route as AuthenticatedIntelligenceSetupRouteImport } from './routes/_authenticated/intelligence-setup'
 import { Route as CareersIndexRouteImport } from './routes/careers.index'
 import { Route as CareersSlugRouteImport } from './routes/careers.$slug'
 import { Route as InsightsIndexRouteImport } from './routes/insights.index'
@@ -119,6 +120,12 @@ const AuthenticatedIntelligenceRouteRoute =
   AuthenticatedIntelligenceRouteRouteImport.update({
     id: '/intelligence',
     path: '/intelligence',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedIntelligenceSetupRoute =
+  AuthenticatedIntelligenceSetupRouteImport.update({
+    id: '/intelligence-setup',
+    path: '/intelligence-setup',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const CareersIndexRoute = CareersIndexRouteImport.update({
@@ -287,6 +294,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/intelligence': typeof AuthenticatedIntelligenceRouteRouteWithChildren
+  '/intelligence-setup': typeof AuthenticatedIntelligenceSetupRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/insights/$slug': typeof InsightsSlugRoute
   '/intelligence/dashboard': typeof IntelligenceDashboardRoute
@@ -328,6 +336,7 @@ export interface FileRoutesByTo {
   '/team': typeof TeamRoute
   '/terms': typeof TermsRoute
   '/intelligence': typeof IntelligenceIndexRoute
+  '/intelligence-setup': typeof AuthenticatedIntelligenceSetupRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/insights/$slug': typeof InsightsSlugRoute
   '/intelligence/dashboard': typeof IntelligenceDashboardRoute
@@ -370,6 +379,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/_authenticated/intelligence': typeof AuthenticatedIntelligenceRouteRouteWithChildren
+  '/_authenticated/intelligence-setup': typeof AuthenticatedIntelligenceSetupRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/insights/$slug': typeof InsightsSlugRoute
   '/intelligence/dashboard': typeof IntelligenceDashboardRoute
@@ -414,6 +424,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin'
     | '/intelligence'
+    | '/intelligence-setup'
     | '/careers/$slug'
     | '/insights/$slug'
     | '/intelligence/dashboard'
@@ -455,6 +466,7 @@ export interface FileRouteTypes {
     | '/team'
     | '/terms'
     | '/intelligence'
+    | '/intelligence-setup'
     | '/careers/$slug'
     | '/insights/$slug'
     | '/intelligence/dashboard'
@@ -496,6 +508,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/_authenticated/admin'
     | '/_authenticated/intelligence'
+    | '/_authenticated/intelligence-setup'
     | '/careers/$slug'
     | '/insights/$slug'
     | '/intelligence/dashboard'
@@ -648,6 +661,13 @@ declare module '@tanstack/react-router' {
       path: '/intelligence'
       fullPath: '/intelligence'
       preLoaderRoute: typeof AuthenticatedIntelligenceRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/intelligence-setup': {
+      id: '/_authenticated/intelligence-setup'
+      path: '/intelligence-setup'
+      fullPath: '/intelligence-setup'
+      preLoaderRoute: typeof AuthenticatedIntelligenceSetupRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/careers/': {
@@ -924,12 +944,14 @@ const AuthenticatedIntelligenceRouteRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
   AuthenticatedIntelligenceRouteRoute: typeof AuthenticatedIntelligenceRouteRouteWithChildren
+  AuthenticatedIntelligenceSetupRoute: typeof AuthenticatedIntelligenceSetupRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
   AuthenticatedIntelligenceRouteRoute:
     AuthenticatedIntelligenceRouteRouteWithChildren,
+  AuthenticatedIntelligenceSetupRoute: AuthenticatedIntelligenceSetupRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
