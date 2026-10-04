@@ -3,6 +3,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowRight } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Section, SectionHeading, GoldLink, Eyebrow } from "@/components/site/Primitives";
+import { HeroCollage } from "@/components/site/HeroCollage";
 import { Marquee } from "@/components/site/Marquee";
 import { serviceGroups, process, clientSectors } from "@/content/site";
 import { articlesQuery } from "@/lib/articles.functions";
@@ -108,31 +109,13 @@ function Index() {
             </div>
           </div>
 
-          <div className="grid h-[340px] min-h-0 grid-cols-2 gap-4 lg:h-[470px]">
-            <img
-              src={heroMeeting.url}
-              alt="Team collaborating around a table in a bright office"
-              width={736}
-              height={1349}
-              className="h-full w-full min-h-0 rounded-[2rem] object-cover"
-            />
-            <div className="grid min-h-0 grid-rows-2 gap-4">
-              <img
-                src={heroTeam.url}
-                alt="Colleagues smiling while working together on a laptop"
-                width={736}
-                height={946}
-                className="h-full w-full min-h-0 rounded-[2rem] object-cover"
-              />
-              <img
-                src={heroGrowth.url}
-                alt="Colleagues reviewing growth plans on a tablet"
-                width={735}
-                height={860}
-                className="h-full w-full min-h-0 rounded-[2rem] object-cover"
-              />
-            </div>
-          </div>
+          <HeroCollage
+            images={[
+              { src: heroMeeting.url, alt: "Team collaborating around a table in a bright office" },
+              { src: heroTeam.url, alt: "Colleagues smiling while working together on a laptop" },
+              { src: heroGrowth.url, alt: "Colleagues reviewing growth plans on a tablet" },
+            ]}
+          />
         </div>
       </div>
 
