@@ -16,11 +16,16 @@ type MessageRow = {
   created_at: string;
 };
 
-function useCount(table: "cms_case_studies" | "cms_articles" | "cms_careers" | "contact_messages") {
+function useCount(
+  table: "cms_case_studies" | "cms_articles" | "cms_careers" | "contact_messages",
+  status?: string,
+) {
   return useQuery({
-    queryKey: ["count", table],
+    queryKey: ["count", table, status ?? "all"],
     queryFn: async () => {
-      const { count, error } = await supabase.from(table).select("*", { count: "exact", head: true });
+      let q = supabase.from(table).select("*", { count: "exact", head: true });
+      if (status) q = (q as any).eq("status", status);
+      const { count, error } = await q;
       if (error) throw error;
       return count ?? 0;
     },
@@ -31,7 +36,7 @@ function AdminOverview() {
   const works = useCount("cms_case_studies");
   const articles = useCount("cms_articles");
   const careers = useCount("cms_careers");
-  const messages = useCount("contact_messages");
+  const unread = useCount("contact_messages", "new");
 
   const { data: recentMessages = [] } = useQuery({
     queryKey: ["contact_messages", "recent"],
@@ -39,6 +44,7 @@ function AdminOverview() {
       const { data, error } = await supabase
         .from("contact_messages")
         .select("*")
+        .neq("status", "archived")
         .order("created_at", { ascending: false })
         .limit(5);
       if (error) throw error;
@@ -49,8 +55,8 @@ function AdminOverview() {
   const cards = [
     { label: "Case studies", value: works.data ?? 0, to: "/admin/works" },
     { label: "Articles", value: articles.data ?? 0, to: "/admin/articles" },
-    { label: "Open roles", value: careers.data ?? 0, to: "/admin/careers" },
-    { label: "Enquiries", value: messages.data ?? 0, to: "/admin/messages" },
+    { label: "Roles", value: careers.data ?? 0, to: "/admin/careers" },
+    { label: "Unread messages", value: unread.data ?? 0, to: "/admin/messages" },
   ];
 
   return (

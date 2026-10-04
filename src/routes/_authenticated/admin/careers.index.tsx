@@ -10,6 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { useServerFn } from "@tanstack/react-start";
+import { draftJobDescription } from "@/lib/job-draft.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/careers/")({
   component: CareersAdmin,
@@ -63,6 +65,42 @@ function CareersAdmin() {
   const [errors, setErrors] = useState<Partial<Record<keyof Form, string>>>({});
   const [tab, setTab] = useState<"active" | "closed">("active");
   const [saving, setSaving] = useState(false);
+  const [aiNotes, setAiNotes] = useState("");
+  const [drafting, setDrafting] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const draftFn = useServerFn(draftJobDescription);
+
+  async function draftWithAi() {
+    if (form.title.trim().length < 2) {
+      setAiError("Enter a job title first.");
+      return;
+    }
+    setAiError(null);
+    setDrafting(true);
+    try {
+      const d = await draftFn({
+        data: {
+          title: form.title,
+          department: form.department,
+          employment_type: form.employment_type,
+          location: form.location,
+          notes: aiNotes,
+        },
+      });
+      setForm((f) => ({
+        ...f,
+        detail: d.short_description || f.detail,
+        full_description: d.full_description || f.full_description,
+        responsibilities: d.responsibilities.join("\n") || f.responsibilities,
+        requirements: d.requirements.join("\n") || f.requirements,
+      }));
+      toast.success("Draft added — review before saving");
+    } catch (e) {
+      setAiError(e instanceof Error ? e.message : "Drafting failed");
+    } finally {
+      setDrafting(false);
+    }
+  }
 
   const { data: roles = [], isLoading, error } = useQuery({
     queryKey: ["cms_careers"],
@@ -197,6 +235,24 @@ function CareersAdmin() {
 
       <form onSubmit={save} className="soft-card space-y-5 p-8" noValidate>
         <h2 className="font-serif text-xl font-bold">{editingId ? "Edit position" : "Create a position"}</h2>
+        <div className="rounded-2xl border border-hairline bg-secondary/40 p-5">
+          <p className="eyebrow">Draft with AI</p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Fill in the job title, department, employment type and location below, add any role
+            notes here, then let AI draft the description, responsibilities and requirements. Review
+            before publishing.
+          </p>
+          <Textarea
+            value={aiNotes}
+            onChange={(e) => setAiNotes(e.target.value)}
+            placeholder="e.g. Leads national business desk relationships, 5+ years, banking clients…"
+            className="mt-3 rounded-2xl"
+          />
+          {aiError && <p className="mt-2 text-xs text-destructive">{aiError}</p>}
+          <Button type="button" variant="outline" className="mt-3 rounded-full" onClick={draftWithAi} disabled={drafting}>
+            {drafting ? "Drafting…" : "Draft with AI"}
+          </Button>
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           {field("title", "Job title *")}
           {field("slug", "Slug", { placeholder: slugify(form.title) || "auto-from-title" })}
