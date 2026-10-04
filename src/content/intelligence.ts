@@ -2,6 +2,8 @@ export type Capability = {
   id: string;
   number: string;
   name: string;
+  status: string;
+  inBuild: boolean;
   promise: string;
   detail: string;
   points: string[];
@@ -12,6 +14,8 @@ export const capabilities: Capability[] = [
     id: "media-listening",
     number: "01",
     name: "Media Listening",
+    status: "Phase 1 · In build",
+    inBuild: true,
     promise: "Monitor brand mentions across connected sources.",
     detail:
       "Every licensed source feeds one normalised mention stream, so volume, reach and engagement can be compared across channels rather than read in isolation.",
@@ -29,6 +33,8 @@ export const capabilities: Capability[] = [
     id: "sentiment-intelligence",
     number: "02",
     name: "Sentiment Intelligence",
+    status: "Phase 1 · In build",
+    inBuild: true,
     promise: "Classify every mention as positive, neutral or negative.",
     detail:
       "Sentiment is scored at mention level and then rolled up by channel and by topic, so you can see where negativity actually concentrates.",
@@ -43,6 +49,8 @@ export const capabilities: Capability[] = [
     id: "narrative-intelligence",
     number: "03",
     name: "Narrative & Topic Intelligence",
+    status: "Phase 1 · In build",
+    inBuild: true,
     promise: "See the conversation forming before it hardens.",
     detail:
       "Clustering surfaces emerging topics, recurring themes and narrative shifts, with movement tracked against the previous period.",
@@ -56,9 +64,11 @@ export const capabilities: Capability[] = [
     ],
   },
   {
-    id: "reputation-alerts",
+    id: "reputation-monitoring",
     number: "04",
-    name: "Reputation Alerts",
+    name: "Reputation Monitoring",
+    status: "Phase 1 · In build",
+    inBuild: true,
     promise: "Anomaly detection that explains itself.",
     detail:
       "Baselines are learned per project. When volume, reach or sentiment breaks the expected band, an alert is raised with a structured explanation rather than a raw number.",
@@ -67,26 +77,40 @@ export const capabilities: Capability[] = [
       "Sudden reach spikes",
       "Rapid negative sentiment",
       "Viral conversations",
-      "Competitor activity",
       "Emerging reputation risks",
     ],
   },
   {
-    id: "ai-visibility",
+    id: "competitor-intelligence",
     number: "05",
-    name: "AI Visibility",
-    promise: "Know how AI systems describe you.",
+    name: "Competitor Intelligence",
+    status: "Phase 2 · Planned",
+    inBuild: false,
+    promise: "Benchmark your share of the conversation.",
     detail:
-      "Tracked prompts are run against supported AI discovery platforms to record whether — and how — your organisation is represented and cited.",
+      "A named competitive set, held constant for fair comparison, benchmarks your volume, reach, sentiment and narrative share against the organisations competing with you for attention.",
     points: [
-      "Brand visibility",
-      "AI share of voice",
-      "Competitor comparison",
-      "Prompts",
-      "Brand mentions",
-      "Citations and sources",
-      "Position and appearance",
-      "Visibility trend",
+      "Share of voice",
+      "Competitive benchmarking",
+      "Competitor mentions",
+      "Narrative comparison",
+      "Competitor activity alerts",
+    ],
+  },
+  {
+    id: "ai-assisted-analysis",
+    number: "06",
+    name: "AI-Assisted Analysis",
+    status: "Phase 1–2 · In build",
+    inBuild: true,
+    promise: "AI that explains the data — never invents it.",
+    detail:
+      "Summarisation, clustering and anomaly explanation run on your project data only. Where the data is insufficient, the assistant says so plainly instead of producing plausible numbers.",
+    points: [
+      "AI summaries",
+      "Topic clustering",
+      "Anomaly explanation",
+      "Intelligence assistant",
     ],
   },
 ];
