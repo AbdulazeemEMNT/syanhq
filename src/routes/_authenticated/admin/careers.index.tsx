@@ -70,6 +70,18 @@ function CareersAdmin() {
   const [aiError, setAiError] = useState<string | null>(null);
   const draftFn = useServerFn(draftJobDescription);
 
+  const [drafts, setDrafts] = useState<JobDraft[]>([]);
+  function applyDraft(d: JobDraft) {
+    setForm((f) => ({
+      ...f,
+      detail: d.short_description || f.detail,
+      full_description: d.full_description || f.full_description,
+      responsibilities: d.responsibilities.join("\n") || f.responsibilities,
+      requirements: d.requirements.join("\n") || f.requirements,
+    }));
+    toast.success(`${d.style} draft applied — review before saving`);
+  }
+
   async function draftWithAi() {
     if (form.title.trim().length < 2) {
       setAiError("Enter a job title first.");
@@ -87,14 +99,7 @@ function CareersAdmin() {
           notes: aiNotes,
         },
       });
-      setForm((f) => ({
-        ...f,
-        detail: d.short_description || f.detail,
-        full_description: d.full_description || f.full_description,
-        responsibilities: d.responsibilities.join("\n") || f.responsibilities,
-        requirements: d.requirements.join("\n") || f.requirements,
-      }));
-      toast.success("Draft added — review before saving");
+      setDrafts(d);
     } catch (e) {
       setAiError(e instanceof Error ? e.message : "Drafting failed");
     } finally {
@@ -250,8 +255,25 @@ function CareersAdmin() {
           />
           {aiError && <p className="mt-2 text-xs text-destructive">{aiError}</p>}
           <Button type="button" variant="outline" className="mt-3 rounded-full" onClick={draftWithAi} disabled={drafting}>
-            {drafting ? "Drafting…" : "Draft with AI"}
+            {drafting ? "Writing 3 drafts…" : drafts.length ? "Write 3 new drafts" : "Write 3 drafts with AI"}
           </Button>
+          {drafts.length > 0 && (
+            <div className="mt-5 grid gap-4 lg:grid-cols-3">
+              {drafts.map((d, i) => (
+                <div key={i} className="soft-card flex flex-col p-5">
+                  <p className="eyebrow">{d.style}</p>
+                  <p className="mt-2 text-sm font-semibold">{d.short_description}</p>
+                  <p className="mt-2 line-clamp-6 whitespace-pre-line text-xs text-muted-foreground">{d.full_description}</p>
+                  <p className="mt-3 text-xs text-muted-foreground">
+                    {d.responsibilities.length} responsibilities · {d.requirements.length} requirements
+                  </p>
+                  <Button type="button" size="sm" className="mt-4 rounded-full" onClick={() => applyDraft(d)}>
+                    Use this draft
+                  </Button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
         <div className="grid gap-4 md:grid-cols-2">
           {field("title", "Job title *")}
