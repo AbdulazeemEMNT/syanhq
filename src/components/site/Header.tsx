@@ -243,6 +243,12 @@ export function Header() {
               <Search className="h-4 w-4" />
             </Link>
             <Link
+              to="/auth"
+              className="text-sm font-medium text-foreground/75 transition-colors hover:text-accent"
+            >
+              Sign in
+            </Link>
+            <Link
               to="/contact"
               className="inline-flex items-center gap-2 rounded-full bg-navy px-6 py-3 text-xs font-semibold text-navy-foreground transition-colors hover:bg-windsor"
             >
@@ -317,6 +323,7 @@ export function Header() {
               { to: "/intelligence", label: "SYAN Intelligence" },
               { to: "/search", label: "Search" },
               { to: "/contact", label: "Contact" },
+              { to: "/auth", label: "Sign in" },
             ].map((item) => (
               <Link
                 key={item.to}
