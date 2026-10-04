@@ -1,3 +1,4 @@
+import { RequirePermission } from "@/lib/permissions";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -11,7 +12,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/admin/works/")({
-  component: WorksAdmin,
+  component: () => (
+    <RequirePermission permission="works.manage">
+      <WorksAdmin />
+    </RequirePermission>
+  ),
 });
 
 type WorkRow = {
