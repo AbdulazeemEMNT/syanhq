@@ -22,11 +22,11 @@ export const draftJobDescription = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) => input.parse(d))
   .handler(async ({ data, context }): Promise<JobDraft[]> => {
-    const { data: isAdmin } = await context.supabase.rpc("has_role", {
+    const { data: allowed } = await context.supabase.rpc("has_permission", {
       _user_id: context.userId,
-      _role: "admin",
+      _permission: "careers.manage",
     });
-    if (!isAdmin) throw new Error("Only admins can draft job descriptions.");
+    if (!allowed) throw new Error("You don't have permission to draft job descriptions.");
 
     const apiKey = process.env["LOVABLE_API_KEY"];
     if (!apiKey) throw new Error("AI is not configured.");
