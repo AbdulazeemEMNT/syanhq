@@ -3,7 +3,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyRoles, useSession } from "@/lib/admin-data";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/intelligence")({
   component: IntelligenceLayout,
@@ -35,20 +34,6 @@ function IntelligenceLayout() {
     queryClient.clear();
     await supabase.auth.signOut();
     navigate({ to: "/auth", replace: true });
-  }
-
-  async function claimAdmin() {
-    const { data, error } = await supabase.rpc("claim_first_admin");
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
-    if (data) {
-      toast.success("You are now the workspace admin.");
-      queryClient.invalidateQueries();
-    } else {
-      toast.error("An admin already exists. Ask them to grant you access.");
-    }
   }
 
   return (
@@ -104,12 +89,9 @@ function IntelligenceLayout() {
               <p className="font-serif text-base font-bold">No staff role assigned</p>
               <p className="mt-1 text-sm text-muted-foreground">
                 You can see this shell, but project data stays hidden until an admin grants you a
-                role. If this is a new workspace, claim the first admin seat.
+                role.
               </p>
             </div>
-            <Button className="rounded-full" onClick={claimAdmin}>
-              Claim admin access
-            </Button>
           </div>
         </div>
       )}
