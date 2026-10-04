@@ -11,6 +11,9 @@ import { bouquets } from "@/content/pricing";
 import teamCollab from "@/assets/team-collab.jpg";
 import strategyRoom from "@/assets/strategy-room.jpg";
 import pressInterview from "@/assets/press-interview.jpg";
+import heroTeam from "@/assets/syan-hero-team.jpeg.asset.json";
+import heroGrowth from "@/assets/syan-hero-growth.jpeg.asset.json";
+import heroMeeting from "@/assets/syan-hero-meeting.jpeg.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -27,6 +30,10 @@ export const Route = createFileRoute("/")({
         content:
           "PR, search authority, growth marketing and creative for organisations that cannot afford to lose control of their narrative.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:image", content: heroMeeting.url },
+      { name: "twitter:image", content: heroMeeting.url },
     ],
   }),
   loader: ({ context }) =>
@@ -101,30 +108,28 @@ function Index() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid h-[340px] min-h-0 grid-cols-2 gap-4 lg:h-[470px]">
             <img
-              src={teamCollab}
-              alt="SYAN Media strategists collaborating in the studio"
-              width={1024}
-              height={1280}
-              className="col-span-1 h-full w-full rounded-[2rem] object-cover grayscale"
+              src={heroMeeting.url}
+              alt="Team collaborating around a table in a bright office"
+              width={736}
+              height={1349}
+              className="h-full w-full min-h-0 rounded-[2rem] object-cover"
             />
-            <div className="grid gap-4">
+            <div className="grid min-h-0 grid-rows-2 gap-4">
               <img
-                src={pressInterview}
-                alt="Client spokesperson addressing the press"
-                width={1024}
-                height={1024}
-                loading="lazy"
-                className="h-full w-full rounded-[2rem] object-cover grayscale"
+                src={heroTeam.url}
+                alt="Colleagues smiling while working together on a laptop"
+                width={736}
+                height={946}
+                className="h-full w-full min-h-0 rounded-[2rem] object-cover"
               />
               <img
-                src={strategyRoom}
-                alt="Media coverage review session"
-                width={1280}
+                src={heroGrowth.url}
+                alt="Colleagues reviewing growth plans on a tablet"
+                width={735}
                 height={860}
-                loading="lazy"
-                className="h-full w-full rounded-[2rem] object-cover grayscale"
+                className="h-full w-full min-h-0 rounded-[2rem] object-cover"
               />
             </div>
           </div>
