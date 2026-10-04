@@ -4,7 +4,8 @@ import { ArrowRight } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Section, SectionHeading, GoldLink, Eyebrow } from "@/components/site/Primitives";
 import { Marquee } from "@/components/site/Marquee";
-import { serviceGroups, insights, process, clientSectors } from "@/content/site";
+import { serviceGroups, process, clientSectors } from "@/content/site";
+import { articlesQuery } from "@/lib/articles.functions";
 import { worksQuery } from "@/routes/work.index";
 import { bouquets } from "@/content/pricing";
 import teamCollab from "@/assets/team-collab.jpg";
@@ -28,7 +29,11 @@ export const Route = createFileRoute("/")({
       },
     ],
   }),
-  loader: ({ context }) => context.queryClient.ensureQueryData(worksQuery),
+  loader: ({ context }) =>
+    Promise.all([
+      context.queryClient.ensureQueryData(worksQuery),
+      context.queryClient.ensureQueryData(articlesQuery),
+    ]),
   component: Index,
 });
 
@@ -66,6 +71,7 @@ const stats = [
 
 function Index() {
   const { data: works } = useSuspenseQuery(worksQuery);
+  const { data: insights } = useSuspenseQuery(articlesQuery);
   return (
     <SiteLayout>
       {/* Hero */}

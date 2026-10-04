@@ -1,3 +1,4 @@
+import { RequirePermission } from "@/lib/permissions";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -7,7 +8,11 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/admin/messages/")({
-  component: MessagesAdmin,
+  component: () => (
+    <RequirePermission permission="messages.manage">
+      <MessagesAdmin />
+    </RequirePermission>
+  ),
 });
 
 type MessageRow = Tables<"contact_messages">;

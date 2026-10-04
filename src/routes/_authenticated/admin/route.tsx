@@ -2,6 +2,7 @@ import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-rout
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyRoles, useSession } from "@/lib/admin-data";
+import { usePermissions, type Permission } from "@/lib/permissions";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -9,19 +10,22 @@ export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminLayout,
 });
 
-const nav = [
-  { to: "/admin", label: "Overview", exact: true },
-  { to: "/admin/works", label: "Works" },
-  { to: "/admin/articles", label: "Articles" },
-  { to: "/admin/careers", label: "Careers" },
-  { to: "/admin/messages", label: "Messages" },
-] as const;
+const nav: { to: "/admin" | "/admin/works" | "/admin/articles" | "/admin/careers" | "/admin/messages" | "/admin/settings"; label: string; perm: Permission; exact?: boolean }[] = [
+  { to: "/admin", label: "Dashboard", perm: "dashboard.view", exact: true },
+  { to: "/admin/works", label: "Works", perm: "works.manage" },
+  { to: "/admin/articles", label: "Articles", perm: "articles.manage" },
+  { to: "/admin/careers", label: "Careers", perm: "careers.manage" },
+  { to: "/admin/messages", label: "Messages", perm: "messages.manage" },
+  { to: "/admin/settings", label: "Settings", perm: "settings.manage" },
+];
 
 function AdminLayout() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { data: user } = useSession();
   const { data: roles = [] } = useMyRoles();
+  const { data: perms = [], isLoading: permsLoading } = usePermissions();
+  const isOwner = roles.includes("admin");
 
   async function signOut() {
     await queryClient.cancelQueries();
@@ -55,27 +59,24 @@ function AdminLayout() {
             <span className="eyebrow">Website Content</span>
           </div>
           <div className="flex items-center gap-3 text-sm">
-            <Link
+            {isOwner && (<Link
               to="/intelligence/overview"
               className="text-xs font-semibold text-muted-foreground underline underline-offset-4 hover:text-foreground"
             >
               SYAN Intelligence
-            </Link>
+            </Link>)}
             <span className="text-muted-foreground">{user?.email}</span>
-            <span className="rounded-full border border-hairline px-3 py-1 text-xs">
-              {roles.length ? roles.join(", ") : "no role"}
-            </span>
             <Button variant="outline" size="sm" className="rounded-full" onClick={signOut}>
               Sign out
             </Button>
           </div>
         </div>
         <div className="mx-auto flex max-w-7xl flex-wrap gap-2 px-5 pb-4 lg:px-8">
-          {nav.map((item) => (
+          {nav.filter((item) => perms.includes(item.perm)).map((item) => (
             <Link
               key={item.to}
               to={item.to}
-              activeOptions={{ exact: "exact" in item ? item.exact : false }}
+              activeOptions={{ exact: !!item.exact }}
               activeProps={{ className: "bg-navy text-navy-foreground border-navy" }}
               className="rounded-full border border-hairline px-4 py-2 text-xs font-semibold"
             >
@@ -85,18 +86,18 @@ function AdminLayout() {
         </div>
       </header>
 
-      {roles.length === 0 && (
+      {!permsLoading && perms.length === 0 && (
         <div className="mx-auto max-w-7xl px-5 pt-6 lg:px-8">
           <div className="soft-card flex flex-wrap items-center justify-between gap-4 p-6">
             <div>
-              <p className="font-serif text-base font-bold">No staff role assigned</p>
+              <p className="font-serif text-base font-bold">No access yet</p>
               <p className="mt-1 text-sm text-muted-foreground">
-                You can see this shell, but content data stays hidden until an admin grants you a
-                role. If this is a new workspace, claim the first admin seat.
+                Your account has no permissions, or your access has been disabled. Ask a Super
+                Admin to invite you. If this is a brand-new workspace, claim the owner seat.
               </p>
             </div>
             <Button className="rounded-full" onClick={claimAdmin}>
-              Claim admin access
+              Claim owner access
             </Button>
           </div>
         </div>
