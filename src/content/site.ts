@@ -14,7 +14,9 @@ export type Service = {
   outcomes: string[];
 };
 
-export const serviceGroups: ServiceGroup[] = [
+const GROUP_ORDER = ["discovery", "authority", "growth", "creative"];
+
+export const serviceGroups: ServiceGroup[] = ([
   {
     id: "authority",
     title: "Reputation & Authority",
@@ -256,7 +258,7 @@ export const serviceGroups: ServiceGroup[] = [
       },
     ],
   },
-];
+] as ServiceGroup[]).sort((a, b) => GROUP_ORDER.indexOf(a.id) - GROUP_ORDER.indexOf(b.id));
 
 export const services: Service[] = serviceGroups.flatMap((g) => g.services);
 
