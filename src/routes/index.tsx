@@ -9,8 +9,8 @@ import { serviceGroups, process, clientSectors } from "@/content/site";
 import { articlesQuery } from "@/lib/articles.functions";
 import { worksQuery } from "@/routes/work.index";
 import { bouquets } from "@/content/pricing";
-import teamCollab from "@/assets/team-collab.jpg";
-import strategyRoom from "@/assets/strategy-room.jpg";
+import aboutInterview from "@/assets/about-interview.jpg.asset.json";
+import aboutStudioTeam from "@/assets/about-studio-team.jpg.asset.json";
 import pressInterview from "@/assets/press-interview.jpg";
 import heroTeam from "@/assets/syan-hero-team.jpeg.asset.json";
 import heroGrowth from "@/assets/syan-hero-growth.jpeg.asset.json";
@@ -152,18 +152,18 @@ function Index() {
           <div className="mt-14 grid gap-10 lg:grid-cols-2">
             <div className="grid gap-5">
               <img
-                src={strategyRoom}
-                alt="SYAN Media team reviewing a campaign"
-                width={1280}
-                height={860}
+                src={aboutInterview.url}
+                alt="SYAN Media crew filming an interview with a client spokesperson"
+                width={1200}
+                height={900}
                 loading="lazy"
                 className="w-full rounded-[2rem] object-cover grayscale"
               />
               <img
-                src={teamCollab}
-                alt="SYAN Media consultants at work"
-                width={1024}
-                height={1280}
+                src={aboutStudioTeam.url}
+                alt="SYAN Media team laughing together in the studio"
+                width={1378}
+                height={768}
                 loading="lazy"
                 className="h-64 w-full rounded-[2rem] object-cover grayscale"
               />
