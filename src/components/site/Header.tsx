@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import syanLogo from "@/assets/syan-logo-full.png";
+import syanMark from "@/assets/syan-logo-mark-dark.png";
 import {
   Menu,
   X,
@@ -152,7 +152,8 @@ export function Header() {
       <div className="border-b border-hairline bg-background/95 backdrop-blur">
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-8 px-5 lg:px-8">
           <Link to="/" className="flex items-center gap-3" aria-label="SYAN Media — home">
-            <img src={syanLogo} alt="SYAN Media" className="h-8 w-auto" />
+            <img src={syanMark} alt="SYAN Media" className="h-8 w-auto" />
+            <span className="font-logo text-xl font-semibold text-foreground">syanmedia</span>
           </Link>
 
           <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary">

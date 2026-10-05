@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import syanLogo from "@/assets/syan-logo-full.png";
+import syanMark from "@/assets/syan-logo-mark-dark.png";
 import {
   PRIORITIES,
   domainFrom,
@@ -167,7 +167,7 @@ function SetupWizard() {
     <div className="min-h-screen bg-secondary/40">
       <header className="border-b border-hairline bg-card">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-5 py-4">
-          <Link to="/" aria-label="SYAN Media — home"><img src={syanLogo} alt="SYAN Media" className="h-6 w-auto" /></Link>
+          <Link to="/" aria-label="SYAN Media — home"><img src={syanMark} alt="SYAN Media" className="h-6 w-auto" /></Link>
           <span className="eyebrow">SYAN Intelligence</span>
         </div>
       </header>
