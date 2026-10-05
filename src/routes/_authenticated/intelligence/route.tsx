@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyRoles, useSession } from "@/lib/admin-data";
 import { Button } from "@/components/ui/button";
+import syanLogo from "@/assets/syan-logo-full.png";
 
 export const Route = createFileRoute("/_authenticated/intelligence")({
   component: IntelligenceLayout,
@@ -48,8 +49,8 @@ function IntelligenceLayout() {
       <header className="border-b border-hairline bg-card">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-4 lg:px-8">
           <div className="flex items-center gap-4">
-            <Link to="/intelligence/overview" className="font-serif text-lg font-bold">
-              SYAN
+            <Link to="/intelligence/overview" aria-label="SYAN Intelligence — overview">
+              <img src={syanLogo} alt="SYAN Media" className="h-6 w-auto" />
             </Link>
             <span className="eyebrow">SYAN Intelligence</span>
           </div>

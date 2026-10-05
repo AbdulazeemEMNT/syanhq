@@ -203,6 +203,10 @@
   }
 }
 
+@utility font-logo {
+  font-family: "Glancyr", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
 @utility eyebrow {
   display: inline-flex;
   align-items: center;

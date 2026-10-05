@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import syanLogo from "@/assets/syan-logo-full.png";
 
 export const Route = createFileRoute("/intelligence/sign-in")({
   ssr: false,
@@ -93,8 +94,8 @@ function IntelligenceSignIn() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-navy px-5 py-16">
       <div className="w-full max-w-md rounded-[2rem] border border-hairline bg-card p-10">
-        <Link to="/intelligence" className="eyebrow">
-          SYAN Intelligence
+        <Link to="/intelligence" aria-label="SYAN Intelligence">
+          <img src={syanLogo} alt="SYAN Media" className="h-7 w-auto" />
         </Link>
         <h1 className="display-lg mt-4 text-3xl">
           {mode === "signup" ? "Create your account" : "Sign in"}
