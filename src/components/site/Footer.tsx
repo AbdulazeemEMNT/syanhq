@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { contact, services } from "@/content/site";
+import syanMark from "@/assets/syan-logo-mark.png";
 
 const explore = [
   { to: "/", label: "Home" },
@@ -41,7 +42,10 @@ export function Footer() {
 
           <div className="grid gap-12 px-8 py-16 md:grid-cols-2 lg:grid-cols-5 lg:px-14">
             <div>
-              <p className="font-serif text-xl font-extrabold text-navy-foreground">SYAN MEDIA</p>
+              <p className="flex items-center gap-2.5">
+                <img src={syanMark} alt="" className="h-7 w-7" />
+                <span className="font-logo text-xl font-semibold text-navy-foreground">syanmedia</span>
+              </p>
               <p className="mt-4 text-sm leading-relaxed text-white/60">
                 Narrative Engineered.
                 <br />

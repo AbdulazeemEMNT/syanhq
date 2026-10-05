@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useMyRoles, useSession } from "@/lib/admin-data";
 import { usePermissions, type Permission } from "@/lib/permissions";
 import { Button } from "@/components/ui/button";
+import syanLogo from "@/assets/syan-logo-full.png";
 
 // Central gate for every /admin/* page: the parent layout has already verified the
 // session; here we resolve permissions before anything renders.
@@ -80,8 +81,8 @@ function AdminLayout() {
       <header className="border-b border-hairline bg-card">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-4 lg:px-8">
           <div className="flex items-center gap-4">
-            <Link to="/" className="font-serif text-lg font-bold">
-              SYAN
+            <Link to="/" aria-label="SYAN Media — home">
+              <img src={syanLogo} alt="SYAN Media" className="h-6 w-auto" />
             </Link>
             <span className="eyebrow">Website Content</span>
           </div>
