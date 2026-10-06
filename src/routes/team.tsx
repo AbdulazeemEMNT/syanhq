@@ -27,8 +27,8 @@ function Team() {
     <SiteLayout>
       <PageHero
         eyebrow="Team"
-        title="Specialist units, one accountable team."
-        intro="Senior people on every account — no junior hand-offs, no anonymous execution."
+        title="The people behind the work."
+        intro="A focused team bringing strategy, creativity, content and media together to build brands that get noticed."
       />
       <Section>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -39,7 +39,9 @@ function Team() {
               </div>
               <p className="mt-6 font-serif font-bold text-xl">{m.name}</p>
               <p className="mt-1 text-sm text-accent">{m.role}</p>
-              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{m.focus}</p>
+              {m.focus && (
+                <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{m.focus}</p>
+              )}
             </div>
           ))}
         </div>
