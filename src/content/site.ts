@@ -485,47 +485,16 @@ export const getInsight = (slug: string) => insights.find((i) => i.slug === slug
 export type TeamMember = {
   name: string;
   role: string;
-  focus: string;
+  focus?: string;
   initials: string;
 };
 
 export const team: TeamMember[] = [
-  {
-    name: "Adebiyi Abdulazeem",
-    role: "Founder & Principal Strategist",
-    focus: "Narrative strategy, executive positioning, editorial relationships",
-    initials: "AA",
-  },
-  {
-    name: "Media Relations Desk",
-    role: "Press & Editorial",
-    focus: "National print, broadcast and online placements",
-    initials: "MR",
-  },
-  {
-    name: "Search & AI Discovery Unit",
-    role: "Search Authority",
-    focus: "Ranking, entity management and AI citation",
-    initials: "SD",
-  },
-  {
-    name: "Creative Studio",
-    role: "Design, Film & Copy",
-    focus: "Identity systems, video production and conversion copy",
-    initials: "CS",
-  },
-  {
-    name: "Intelligence Unit",
-    role: "Monitoring & Analysis",
-    focus: "Media listening, sentiment, narrative and risk reporting",
-    initials: "IU",
-  },
-  {
-    name: "Client Growth",
-    role: "Performance & Accounts",
-    focus: "Acquisition campaigns, retention and reporting",
-    initials: "CG",
-  },
+  { name: "Sodiq Oyeleke", role: "Principal Strategist", initials: "SO" },
+  { name: "Muhammad Abd'Rasheed", role: "Content/Marketing Associate", initials: "MA" },
+  { name: "Abdulazeem Adebiyi", role: "Creative Associate", initials: "AA" },
+  { name: "Anas Abdulwaheed", role: "Video Editor Associate", initials: "AA" },
+  { name: "Nimah Olayiwola", role: "Social Media Manager", initials: "NO" },
 ];
 
 export const clientSectors = [
