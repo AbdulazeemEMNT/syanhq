@@ -171,8 +171,8 @@ function Index() {
             <div>
               <div className="space-y-5 text-base leading-relaxed text-muted-foreground">
                 <p>
-                  Too many PR agencies focus on vanity mentions that never bring in a single
-                  customer or investor. We do things differently.
+                  Publicity without a payoff is just noise. We build coverage that earns trust,
+                  moves buyers and opens doors to the people who matter to your business.
                 </p>
                 <p>
                   At SYAN Media, we connect powerful storytelling with real commercial results. We

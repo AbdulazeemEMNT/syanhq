@@ -490,11 +490,11 @@ export type TeamMember = {
 };
 
 export const team: TeamMember[] = [
-  { name: "Sodiq Oyeleke", role: "Principal Strategist", initials: "SO" },
-  { name: "Muhammad Abd'Rasheed", role: "Content/Marketing Associate", initials: "MA" },
-  { name: "Abdulazeem Adebiyi", role: "Creative Associate", initials: "AA" },
-  { name: "Anas Abdulwaheed", role: "Video Editor Associate", initials: "AA" },
-  { name: "Nimah Olayiwola", role: "Social Media Manager", initials: "NO" },
+  { name: "Oluwaleke Adekunle", role: "Principal Strategist", initials: "OA" },
+  { name: "Eniola Rasheed", role: "Content/Marketing Associate", initials: "ER" },
+  { name: "Oluwadamilare Awoyemi", role: "Creative Associate", initials: "OD" },
+  { name: "Ayodele Waheed", role: "Video Editor Associate", initials: "AW" },
+  { name: "Oyinkansola Abdul", role: "Social Media Manager", initials: "OY" },
 ];
 
 export const clientSectors = [
@@ -554,8 +554,8 @@ export const contact = {
   socials: [
     { label: "LinkedIn", href: "https://www.linkedin.com/company/syanmedia" },
     { label: "X (Twitter)", href: "https://x.com/syanmedia" },
-    { label: "Instagram", href: "https://www.instagram.com/syanmedia" },
-    { label: "Facebook", href: "https://www.facebook.com/syanmedia" },
+    { label: "Instagram", href: "https://www.instagram.com/syanmediahq/" },
+    { label: "Facebook", href: "https://www.facebook.com/syanmediahq" },
   ],
 };
 
