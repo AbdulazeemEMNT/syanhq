@@ -29,7 +29,7 @@ function About() {
       <PageHero
         eyebrow="About"
         title="We Don't Just Get You Attention. We Help You Grow."
-        intro="Too many PR agencies focus on vanity mentions that never bring in a single customer or investor. We do things differently."
+        intro="Publicity without a payoff is just noise. We build coverage that earns trust, moves buyers and opens doors to the people who matter to your business."
       />
 
       <Section className="grid gap-14 lg:grid-cols-[1fr_1.2fr]">
