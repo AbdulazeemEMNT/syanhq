@@ -9,6 +9,8 @@
 - Admin split: Website Content CMS (/admin — works, articles, careers, messages) + SYAN Intelligence product (/intelligence — overview, mentions, topics, competitors, reports, ask, projects, integrations, users)
 - Contact form now saves enquiries to the database (plus the existing mailto handoff)
 - Pricing: landing-page teaser + full `/pricing` page from the pricing matrix
+- Fix approved SEO findings: truthful contact timing feedback, article structured data, homepage share image, and sitemap
+- Publish the updated contact and cover-image handling after verification
 
 ## Next
 - Provider ingestion + analytics wiring
