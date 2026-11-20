@@ -45,11 +45,11 @@ type Row = {
 };
 
 async function shape(rows: Row[]): Promise<PublicArticle[]> {
-  const sb = publicClient();
   const paths = rows.map((r) => r.cover_image_path).filter((p): p is string => !!p);
   const urls = new Map<string, string>();
   if (paths.length) {
-    const { data } = await sb.storage.from(WORK_COVER_BUCKET).createSignedUrls(paths, 60 * 60 * 24);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data } = await supabaseAdmin.storage.from(WORK_COVER_BUCKET).createSignedUrls(paths, 60 * 60 * 24);
     data?.forEach((d) => d.path && d.signedUrl && urls.set(d.path, d.signedUrl));
   }
   return rows.map((r) => ({

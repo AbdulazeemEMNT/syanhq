@@ -28,20 +28,8 @@ export const submitContactMessage = createServerFn({ method: "POST" })
     if ((data.message.match(/https?:\/\//g) ?? []).length > 3) {
       throw new Error("Please remove some links from your message.");
     }
-    const { createClient } = await import("@supabase/supabase-js");
-    const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
-    const sb = createClient(process.env["SUPABASE_URL"]!, key, {
-      auth: { persistSession: false, autoRefreshToken: false },
-      global: {
-        fetch: (input, init) => {
-          const h = new Headers(init?.headers);
-          if (h.get("Authorization") === `Bearer ${key}`) h.delete("Authorization");
-          h.set("apikey", key);
-          return fetch(input, { ...init, headers: h });
-        },
-      },
-    });
-    const { error } = await sb.from("contact_messages").insert({
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.from("contact_messages").insert({
       name: data.name,
       organisation: data.organisation || null,
       email: data.email,

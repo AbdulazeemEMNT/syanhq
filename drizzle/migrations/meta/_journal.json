@@ -120,6 +120,13 @@
       "when": 1791154353343,
       "tag": "0016_intelligence_org_isolation",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1795188999575,
+      "tag": "0017_secure_contact_and_work_cover_access",
+      "breakpoints": true
     }
   ]
 }
